@@ -141,4 +141,23 @@
         <tag>Wp</tag>
       </tags>
   </entry>
+  <entry>
+    <title>古典杂记</title>
+    <url>/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/%E5%8F%A4%E5%85%B8%E6%9D%82%E8%AE%B0/</url>
+    <content><![CDATA[<p>记录一下刷题遇到的一些古典密码题</p>
+<h2 id="FSCTF-2023-兔帽的奇妙冒险"><a href="#FSCTF-2023-兔帽的奇妙冒险" class="headerlink" title="[FSCTF 2023]兔帽的奇妙冒险"></a>[FSCTF 2023]兔帽的奇妙冒险</h2><span id="more"></span>
+<p>附件：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">有一只名叫贝斯<span class="number">64</span>先生的兔子。它戴着一顶古老的兔帽子，帽子上绣着奇异的符文，传说这是一种能与神秘力量连接的魔法帽子。</span><br><span class="line">OFR<span class="number">3</span>c<span class="number">05</span>RTEFK<span class="name">M2</span>Q<span class="number">3</span>QkxqRGlTbWthWExxSXhrZF<span class="meta">o3</span>SU<span class="number">5</span>DVWRkOTVFQ<span class="number">2</span>JUSE<span class="number">1</span><span class="attr">VcXpRQk9</span>hc<span class="number">3</span>hqMzRrbHRJMD<span class="number">0</span>=</span><br></pre></td></tr></table></figure>
+<p>base64 解密一下</p>
+<p><code>8TwsNQLAJ3d7BLjDiSmkaXLqIxkdZ7INCUdd95ECbTHMUqzQBOasxj34kltI0=</code></p>
+<p>再加上 Rabbit 特征的密文头 <code>U2FsdGVkX1</code>  再Rabbit 解密</p>
+<p><code>FSCTF&#123;Bunny_is_so_cute_Why_e@t_bunny&#125;</code> </p>
+]]></content>
+      <categories>
+        <category>古典密码</category>
+      </categories>
+      <tags>
+        <tag>古典密码</tag>
+      </tags>
+  </entry>
 </search>
