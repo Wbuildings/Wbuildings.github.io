@@ -577,7 +577,7 @@ u = \frac{x!}{y!(x-y)!}\bmod p \mod 255</script><p><code>&amp; 255</code> 某种
 <p>因为 $p^2q^2$ 有2048bit了，$-p^2-q^2+1$ 可以抹掉</p>
 <p>就可以用 维纳攻击 求出 d了，</p>
 <p>最后一步就是 已知ed分解n了</p>
-<p>原理：</p>
+<p>原理：<span class="exturl" data-url="aHR0cHM6Ly93d3cuZGktbWd0LmNvbS5hdS9yc2FfZmFjdG9yaXplX24uaHRtbA==">RSA: how to factorize N given ed<i class="fa fa-external-link-alt"></i></span></p>
 <script type="math/tex; mode=display">
 e*d=1~mod~\phi(n)\\
 =>k=e*d-1\\
