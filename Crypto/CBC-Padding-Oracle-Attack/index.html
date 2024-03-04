@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesa2bbe76edbe12194daa01d3036d7f0e.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images39d02d1b03dc28cbc8946f8af746bb6.png">
 <meta property="article:published_time" content="2024-03-03T06:51:56.000Z">
-<meta property="article:modified_time" content="2024-03-04T18:04:23.432Z">
+<meta property="article:modified_time" content="2024-03-04T18:10:05.173Z">
 <meta property="article:author" content="Wbuildings">
 <meta property="article:tag" content="AES">
 <meta name="twitter:card" content="summary">
@@ -300,7 +300,7 @@
 <hr>
 <h3 id="两种常见的填充算法"><a href="#两种常见的填充算法" class="headerlink" title="两种常见的填充算法"></a>两种常见的填充算法</h3><p>两种常见的填充算法，分别是<code>Pkcs5Padding</code>和<code>Pkcs7Padding</code>。</p>
 <p>在<code>Pkcs5Padding</code>中，明确定义 <code>Block</code> 的大小为 8字节，<font color='orange'>一组中差几个字节就填充几</font>，如差一字节为8字节便填充一字节:<code>0x01</code> （十六进制表示）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">待加密数据原长度为<span class="number">7</span>字节：<span class="number">0x4</span>10x410x410x410x410x410x41</span><br><span class="line">			  填充后：<span class="number">0x4</span>10x410x410x410x410x410x410x01</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">待加密数据原长度为<span class="number">7</span>字节：<span class="number">0x4</span>10x410x410x410x410x410x41</span><br><span class="line">填充后：<span class="number">0x4</span>10x410x410x410x410x410x410x01</span><br></pre></td></tr></table></figure>
 <p>在<code>Pkcs7Padding</code>定义中，对于块的大小是不确定的，可以在<code>1-255</code>之间（块长度超出255的尚待研究），填充值的算法都是一样的</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pad = k - (l mod k)  <span class="comment"># k=块大小，l=数据长度，如果k=8， l=9，则需要填充额外的7个byte的7</span></span><br></pre></td></tr></table></figure>
 <font color='red'>注意：</font>
