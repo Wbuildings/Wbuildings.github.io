@@ -32,7 +32,7 @@
 <meta property="og:description" content="记录一下刷题遇到的一些古典密码题 [FSCTF 2023]兔帽的奇妙冒险">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-19T13:10:45.000Z">
-<meta property="article:modified_time" content="2024-03-01T12:48:53.228Z">
+<meta property="article:modified_time" content="2024-03-07T18:49:41.910Z">
 <meta property="article:author" content="Wbuildings">
 <meta property="article:tag" content="古典密码">
 <meta name="twitter:card" content="summary">
@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">4</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">5</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -143,7 +143,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">15</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -267,7 +267,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>334</span>
+              <span>773</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -294,6 +294,20 @@
 <p><code>8TwsNQLAJ3d7BLjDiSmkaXLqIxkdZ7INCUdd95ECbTHMUqzQBOasxj34kltI0=</code></p>
 <p>再加上 Rabbit 特征的密文头 <code>U2FsdGVkX1</code>  再Rabbit 解密</p>
 <p><code>FSCTF&#123;Bunny_is_so_cute_Why_e@t_bunny&#125;</code> </p>
+<h2 id="MoeCTF-2021-OldButPopular"><a href="#MoeCTF-2021-OldButPopular" class="headerlink" title="[MoeCTF 2021]OldButPopular"></a>[MoeCTF 2021]OldButPopular</h2><blockquote>
+<p>附件</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qj3r_y31s&#123;vxk7_hig__0_a&#125;g4ax_x0x540slv</span><br><span class="line">你能解密出这段是什么意思吗？ 观察一下这段密文格式有什么不一样</span><br></pre></td></tr></table></figure>
+<p>一看就是移了顺序的，而且 <code>&#123;&#125;</code> 也移了，栅栏密码：所有字母变换位置但字母不变</p>
+<p>这题的flag头 不是 <code>flag</code>就是 <code>moectf</code>，密文里没有，那就是字母变换了，大概是凯撒加密了</p>
+<p>因为凯撒只对26个字母加密，所以<code>&#123;&#125;</code>是不动的，所以我们可以先进行凯撒解密通过 <code>&#123;&#125;</code> 来筛选正确的密文</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="language-xml">qsigxj</span><span class="template-variable">&#123;g453v_a4rx_x0_k0_sy7_xl3_a0v1h&#125;</span></span><br></pre></td></tr></table></figure>
+<p>在线网址枚举或者随波逐流一把梭</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moectf&#123;c<span class="number">453</span>r_w<span class="number">4</span><span class="symbol">nt_t0</span>_<span class="name">g0</span>_ou<span class="number">7</span>_th<span class="number">3</span>_w<span class="number">0</span>r<span class="number">1</span>d&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>加密原理：</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cucXF4aXV6aS5jbi9iaWFubWEva2Fpc2FtaW1hLnBocA==">凯撒密码在线加密解密 - 千千秀字 (qqxiuzi.cn)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cucXF4aXV6aS5jbi9iaWFubWEvemhhbGFubWltYS5waHA=">栅栏密码在线加密解密 - 千千秀字 (qqxiuzi.cn)<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 
@@ -403,7 +417,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FSCTF-2023-%E5%85%94%E5%B8%BD%E7%9A%84%E5%A5%87%E5%A6%99%E5%86%92%E9%99%A9"><span class="nav-number">1.</span> <span class="nav-text">[FSCTF 2023]兔帽的奇妙冒险</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FSCTF-2023-%E5%85%94%E5%B8%BD%E7%9A%84%E5%A5%87%E5%A6%99%E5%86%92%E9%99%A9"><span class="nav-number">1.</span> <span class="nav-text">[FSCTF 2023]兔帽的奇妙冒险</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MoeCTF-2021-OldButPopular"><span class="nav-number">2.</span> <span class="nav-text">[MoeCTF 2021]OldButPopular</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -419,7 +433,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -432,7 +446,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -453,7 +467,7 @@
           <h3 class="widget-title">Tag Cloud</h3>
           <div id="myCanvasContainer" class="widget tagcloud">
               <canvas width="250" height="250" id="resCanvas" style="width=100%">
-                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li></ul>
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li></ul>
               </canvas>
           </div>
       </div>
@@ -487,13 +501,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">173k</span>
+    <span title="站点总字数">194k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">2:37</span>
+    <span title="站点阅读时长">2:56</span>
 </div>
 
   <script>
