@@ -31,15 +31,17 @@
 <meta property="og:site_name" content="W&#39;Blog">
 <meta property="og:description" content="金风玉露一相逢，便胜却人间无数。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203101217.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesd796c18983a9d03dae006f6f5370298.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images7c94cc56446b6b49053e34b42bc90d5.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240315223427538.png">
 <meta property="article:published_time" content="2024-03-15T11:06:34.000Z">
-<meta property="article:modified_time" content="2024-03-15T14:37:37.074Z">
+<meta property="article:modified_time" content="2024-03-16T12:32:55.364Z">
 <meta property="article:author" content="Wbuildings">
 <meta property="article:tag" content="密码知识">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesd796c18983a9d03dae006f6f5370298.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png">
 
 <link rel="canonical" href="https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/">
 
@@ -271,7 +273,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>7.5k</span>
+              <span>7.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -303,15 +305,14 @@
 <li>大素数 <code>p</code></li>
 <li>确定 <code>n</code>，作为 子密钥的持有者的数量</li>
 <li>确定 <code>t</code></li>
-<li>在<code>1</code>到<code>p</code>的有限域中随机取 <code>t-1</code> 个数，记作 $a<em>1,a_2,\dots,a</em>{t-1}$ ，作为 <code>t-1</code> 次多项式的系数</li>
-<li>多项式：$f(x)=s+a<em>1x+a_2x^2+\dots+a</em>{t-1}x^{t-1}$ ，共 <code>n</code>项</li>
+<li><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png" alt="image-20240316203231773"></li>
 <li><code>n</code>个持有者记作 $P_1,P_2,\dots,P_n$ ，$P_i$ 分到的子密钥为 $f(i)$ </li>
 <li>销毁多项式</li>
 </ul>
 <h2 id="恢复秘密过程"><a href="#恢复秘密过程" class="headerlink" title="恢复秘密过程"></a>恢复秘密过程</h2><p>当 <code>x = 0</code> 时，$f(0)=s$ ，即可恢复出 <code>s</code> ，s即我们所求</p>
 <p>恢复秘密至少需要 <code>t</code> 个子密钥</p>
 <p>用到 拉格朗日插值公式 ：</p>
-<p>$f(x)=\sum<em>{j=1}^{t}f(i_j)\prod</em>{l=1,l!=j}^{t}\frac{x-i_l}{i_j-i_l}\bmod p $</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203101217.png" alt="image-20240316203101217"></p>
 <p>计算过程如下：</p>
 <p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesd796c18983a9d03dae006f6f5370298.png" alt="d796c18983a9d03dae006f6f5370298"></p>
 <h2 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl81MTIxNjU1My9hcnRpY2xlL2RldGFpbHMvMTIyMDczODA5">Shamir 门限方案｜秘密共享｜拉格朗日插值｜密码学_shamir门限方案-CSDN博客<i class="fa fa-external-link-alt"></i></span></p>
