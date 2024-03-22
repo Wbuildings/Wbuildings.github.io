@@ -1185,12 +1185,12 @@ d^2~~~ 2cd~~~c^2+2bd~~~2ad+2bc~~~2ac+b^2~~~2ab~~~a^2~~~1~~~k_1\cdots k_4 \begin{
 <h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>私钥为一个超递增序列  $\left { a<em>n \right } $，满足 $a_i&gt;\sum</em>{k=1}^{i-1}a_k $</p>
 <p>模数 m，满足 $m&gt;\sum_{i=1}^{n}a_i$ </p>
 <p>乘数w，满足<code>gcd(w,m)=1</code>，</p>
-<p>公钥为  $\left { b_i \right } $ ，满足 $b_i=wa_i \pmod m$ </p>
-<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>设明文为 $\left {  v_i \right }，v_i\in\left { 0,1 \right } $，</p>
+<p>公钥为  $ \left { b_i \right } $ ，满足 $b_i=wa_i \pmod m$ </p>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>设明文为 $ \left {  v_i \right } ，v_i\in\left { 0,1 \right } $，</p>
 <script type="math/tex; mode=display">
 c\equiv\sum_{i=1}^{n}b_iv_i \pmod m</script><h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><script type="math/tex; mode=display">
 v=w^{-1}c=\sum_{i=1}^{n}v_ia_i \pmod m</script><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">v = c * inverse(w,m) % m</span><br><span class="line"><span class="comment"># a = [pow(3, i) for i in range(64)]</span></span><br><span class="line"></span><br><span class="line">m = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> reverse(a):</span><br><span class="line">	<span class="keyword">if</span> v &gt;= i:</span><br><span class="line">        m = <span class="string">&#x27;1&#x27;</span> + m</span><br><span class="line">        v -= i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m</span><br></pre></td></tr></table></figure>
-<h2 id="造格"><a href="#造格" class="headerlink" title="造格"></a>造格</h2><p>当<font color='orange'>密度</font>d = $\frac{len(b)}{log<em>2{b</em>{max}}}&lt;0.9408$ 时，<code>LLL</code>算法通杀这类背包问题</p>
+<h2 id="造格"><a href="#造格" class="headerlink" title="造格"></a>造格</h2><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322221045087.png" alt="image-20240322221045087"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line">math.log2(b)</span><br></pre></td></tr></table></figure>
 <h3 id="常规格："><a href="#常规格：" class="headerlink" title="常规格："></a>常规格：</h3><script type="math/tex; mode=display">
 L=\begin{bmatrix}
