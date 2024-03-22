@@ -32,9 +32,10 @@
 <meta property="og:description" content="醉漾轻舟，信流引到花深处。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images978279a04ee1a8a4ce588f6da353885.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322222051279.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322221045087.png">
 <meta property="article:published_time" content="2024-03-21T18:20:47.000Z">
-<meta property="article:modified_time" content="2024-03-22T14:12:56.208Z">
+<meta property="article:modified_time" content="2024-03-22T14:21:33.472Z">
 <meta property="article:author" content="Wbuildings">
 <meta property="article:tag" content="Lattice">
 <meta name="twitter:card" content="summary">
@@ -298,7 +299,8 @@
 <p>公钥为  $ \left { b_i \right } $ ，满足 $b_i=wa_i \pmod m$ </p>
 <h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>设明文为 $ \left {  v_i \right } ，v_i\in\left { 0,1 \right } $，</p>
 <script type="math/tex; mode=display">
-c\equiv\sum_{i=1}^{n}b_iv_i \pmod m</script><h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><script type="math/tex; mode=display">
+c\equiv\sum_{i=1}^{n}b_iv_i \pmod m</script><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322222051279.png" alt="image-这渲染，也是醉了"></p>
+<h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><script type="math/tex; mode=display">
 v=w^{-1}c=\sum_{i=1}^{n}v_ia_i \pmod m</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">v = c * inverse(w,m) % m</span><br><span class="line"><span class="comment"># a = [pow(3, i) for i in range(64)]</span></span><br><span class="line"></span><br><span class="line">m = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> reverse(a):</span><br><span class="line">	<span class="keyword">if</span> v &gt;= i:</span><br><span class="line">        m = <span class="string">&#x27;1&#x27;</span> + m</span><br><span class="line">        v -= i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m</span><br></pre></td></tr></table></figure>
 <h2 id="造格"><a href="#造格" class="headerlink" title="造格"></a>造格</h2><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322221045087.png" alt="image-20240322221045087"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line">math.log2(b)</span><br></pre></td></tr></table></figure>
