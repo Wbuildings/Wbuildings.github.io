@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/font-awesome/css/font-awesome.min.css"/ media="defer" onload="this.media='all'">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wbuildings.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="金风玉露一相逢，便胜却人间无数。   始于2024-03-15，新增2024-08-09">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shamir门限方案">
+<meta property="og:url" content="https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="W&#39;Blog">
+<meta property="og:description" content="金风玉露一相逢，便胜却人间无数。   始于2024-03-15，新增2024-08-09">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203101217.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesd796c18983a9d03dae006f6f5370298.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images7c94cc56446b6b49053e34b42bc90d5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240315223427538.png">
+<meta property="article:published_time" content="2024-08-09T11:06:34.000Z">
+<meta property="article:modified_time" content="2024-09-02T14:13:55.965Z">
+<meta property="article:author" content="Wbuildings">
+<meta property="article:tag" content="密码知识">
+<meta property="article:tag" content="Shamir">
+<meta property="article:tag" content="LWE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png">
+
+<link rel="canonical" href="https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shamir门限方案 | W'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <script defer src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">W'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Wbuildings的自勉小屋</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL1didWlsZGluZ3M=" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Wbuildings">
+      <meta itemprop="description" content="须知少年凌云志，曾许人间第一流">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="W'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shamir门限方案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-08-09 19:06:34" itemprop="dateCreated datePublished" datetime="2024-08-09T19:06:34+08:00">2024-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>金风玉露一相逢，便胜却人间无数。</strong> </p>
+<blockquote>
+<p>始于2024-03-15，新增2024-08-09</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>先来看一个故事，1月8日，贵州省锦屏县平秋镇圭叶村开始了第七届村主任换届选举。这个藏身大山深处的偏僻小山村，最近刚刚因一枚奇特的公章而成为了人们关注的焦点。为了在村里进行民主理财管理，一年多前，村民想出了一个点子，把村财务公章分成五瓣交由5位选出的村民代表掌管，专门审核村干部的开销。近日消息一传出后，顿时引起了外界的广泛热议。这枚“五瓣章”更是被网友称为史上最牛公章。</p>
+<p>那么在密码学当中，有没有这种方案，必须满足一定人数才能解出来整个秘密消息，而少于预设的人数阈值则解不出来这个秘密消息呢？</p>
+<hr>
+<h1 id="Shamir秘密共享方案"><a href="#Shamir秘密共享方案" class="headerlink" title="Shamir秘密共享方案"></a>Shamir秘密共享方案</h1><p><code>Shamir秘密共享方案</code>，叫做<code>Shamir Secret Sharing</code>, <code>SSS</code>。</p>
+<p>其有两个参数 n、t（$t\le n$），由此也称作 <code>(t,n)-门限方案</code> 。</p>
+<p>秘密 <code>s</code> 被分成 <code>n</code> 份信息，每一份信息被称为一个子密钥，只有至少<code>t</code>份子密钥时才能会出秘密 <code>s</code>，<code>t</code>称为方案的<code>门限值</code></p>
+<h2 id="子密钥生成算法"><a href="#子密钥生成算法" class="headerlink" title="子密钥生成算法"></a>子密钥生成算法</h2><ul>
+<li>秘密为 <code>s</code></li>
+<li>大素数 <code>p</code></li>
+<li>确定 <code>n</code>，作为 子密钥的持有者的数量</li>
+<li>确定 <code>t</code></li>
+<li><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203231773.png" alt="image-20240316203231773"></li>
+<li><code>n</code>个持有者记作 $P_1,P_2,\dots,P_n$ ，$P_i$ 分到的子密钥为 $f(i)$ </li>
+<li>销毁多项式</li>
+</ul>
+<h2 id="恢复秘密过程"><a href="#恢复秘密过程" class="headerlink" title="恢复秘密过程"></a>恢复秘密过程</h2><p>当 <code>x = 0</code> 时，$f(0)=s$ ，即可恢复出 <code>s</code> ，s即我们所求</p>
+<p>恢复秘密至少需要 <code>t</code> 个子密钥</p>
+<p>用到 拉格朗日插值公式 ：</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240316203101217.png" alt="image-20240316203101217"></p>
+<p>计算过程如下：</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesd796c18983a9d03dae006f6f5370298.png" alt="d796c18983a9d03dae006f6f5370298"></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h2><p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl81MTIxNjU1My9hcnRpY2xlL2RldGFpbHMvMTIyMDczODA5">Shamir 门限方案｜秘密共享｜拉格朗日插值｜密码学_shamir门限方案-CSDN博客<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLnNhZ2lyaS50ZWNoL2luZGV4LnBocC9hcmNoaXZlcy81NS8=">Shamir 门限秘密共享方案 - SAGIRI’S BLOG<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<h1 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h1><h2 id="NKCTF2023-Raven"><a href="#NKCTF2023-Raven" class="headerlink" title="[NKCTF2023] Raven"></a>[NKCTF2023] Raven</h2><blockquote>
+<p>题目</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env sage</span></span><br><span class="line"><span class="comment"># Problem by rec, with a bad raven.</span></span><br><span class="line"><span class="keyword">import</span> os, hashlib</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">Raven</span>(<span class="params">n: <span class="built_in">int</span>, secret: <span class="built_in">bytes</span></span>):</span><br><span class="line">    H = <span class="keyword">lambda</span> x: hashlib.md5(os.urandom(<span class="number">8</span>) + x).digest()</span><br><span class="line"></span><br><span class="line">    p = getPrime(<span class="number">728</span>)</span><br><span class="line">    R.&lt;z&gt; = PolynomialRing(GF(p))</span><br><span class="line"></span><br><span class="line">    seed = H(secret)</span><br><span class="line">    f = R(</span><br><span class="line">        [bytes_to_long(secret)] + [bytes_to_long(H(seed)) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>)]</span><br><span class="line">    )</span><br><span class="line">    x = [getRandomRange(<span class="number">2</span>, p - <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line">    y = [ZZ(f(xi)^<span class="number">2</span> + getPrime(<span class="number">256</span>)) <span class="keyword">for</span> xi <span class="keyword">in</span> x]</span><br><span class="line"></span><br><span class="line">    pairs = <span class="built_in">list</span>(<span class="built_in">zip</span>(x, y))</span><br><span class="line">    <span class="keyword">return</span> p, pairs</span><br><span class="line"></span><br><span class="line">flag = <span class="string">b&#x27;#####&#x27;</span></span><br><span class="line">key = os.urandom(<span class="number">16</span>)</span><br><span class="line">cipher = AES.new(key=key, IV=<span class="built_in">bytes</span>(<span class="built_in">range</span>(<span class="number">16</span>)), mode=AES.MODE_CBC)</span><br><span class="line">ct = cipher.encrypt(flag + os.urandom(<span class="number">16</span> - <span class="built_in">len</span>(flag) % <span class="number">16</span>))</span><br><span class="line">p, pairs = Raven(<span class="number">4</span>, key)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;p = &#125;</span>\n<span class="subst">&#123;pairs = &#125;</span>\n<span class="subst">&#123;ct = &#125;</span>&quot;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">p = 1018551160851728231474335384388576586031917743463656622083024684199383855595168341728561337234276243780407755294430553694832049089534855113774546001494743212076463713621965520780122783825100696968959866614846174188401153</span></span><br><span class="line"><span class="string">pairs = [(615358616404864757405587650175842125441380884418119777842292095751090237848084440177153221092040264723889917863863854377665802549748720692225139890884830475485512763149974948701807492663962748292710803434009673589337265, 84982753624462868217739962129526665082932464631118597651920986288766037499319751354013335054886685186857222944776560264528363811382359242656883760986496856164448940929282013856762706210675691655747370624405968909408102), (528363810186974800127873139379943131424126521611531830591311656948009967709310974894584084912262479395720199930206495204352231804549705720854271566421006481173043064265399467682307971910488405265826107365679757755866812, 496810092723839642457928776423789418365006215801711874210443222720529161066621876103037104247173440072986344011599384793861949574577559989016501090247331146721371126871470611440468688947950954988175225633457347666551944), (68711183101845981499596464753252121346970486988311398916877579778110690480447199642602267233989256728822535174215153145632158860662954277116345331672194812126361911061449082917955000137698138358926301360506687271134873, 995428771589393162202488762223106955302099250561593105620410424291405842350539887383005328242236156038373244928147473800972534658018117705291472213770335998508454938607290279268848513727721410314612261163489156360908800), (61574167546312883246262193556029081771904529137922128124933785599227801608271357738142074310192454183183340219301304405636497744152219785042075198056952749425345561162612590170550454476602892138914473795478531165181812, 618169326093802548516842299173393893046765466917311052414967158839652012130855552015876657514610755108820971877570295328618373296493668146691687291894702228119875561585283226588768969944781923428807766632578060221034862)]</span></span><br><span class="line"><span class="string">ct = b&quot;|2\xf0v7\x05Y\x89\r]\xe93s\rr)#3\xe9\x90%Z\x9a\xd9\x9ck\xba\xec]q\xb8\xf2&#x27;\xc8e~fL\xcf\x93\x00\xd6^s-\xc9\xd6M&quot;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h3><p>记 <code>getPrime(256)</code>  为 <code>t</code> ，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = R(</span><br><span class="line">        [bytes_to_long(secret)] + [bytes_to_long(H(seed)) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(n - <span class="number">1</span>)]</span><br><span class="line">    )</span><br><span class="line"><span class="built_in">print</span>(f)</span><br><span class="line"><span class="comment"># 267335269824855211160668069721049574997*z^3 + 213474783285830430446771422061600488619*z^2 + 206893878840893771912598891815113528931*z + 269303276331389960303404727575127360280</span></span><br></pre></td></tr></table></figure>
+<p>可以得到函数$f(x)=ax^3+bx^2+cx+d\bmod p$ </p>
+<p>而 $y=f(x)^2+t$ </p>
+<p>根据最高项幂可以看出这里的 门阀值为 <code>4</code>，恰好四组数据，可解得 <code>s</code>，即此处的<code>d</code>，也即 <code>key</code></p>
+<p>两式联立得 </p>
+<p>$y_i=a^2x_i^6+2abx_i^5+(b^2+2ac)x_i^4+(2ad+2bc)x_i^3+(2bd+c^2)+2cdx_i+d^2+t_i$ </p>
+<p>也即：</p>
+<p>$a^2x_i^6+2abx_i^5+(b^2+2ac)x_i^4+(2ad+2bc)x_i^3+(2bd+c^2)+2cdx_i+d^2-y_i=-t_i$ </p>
+<hr>
+<h4 id="构造示例"><a href="#构造示例" class="headerlink" title="构造示例"></a>构造示例</h4><p>$c = mb+r \mod n  $    ,      </p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images7c94cc56446b6b49053e34b42bc90d5.png" alt="7c94cc56446b6b49053e34b42bc90d5"></p>
+<hr>
+<p>根据 la 佬的格 构造示例，构造如下格： </p>
+<script type="math/tex; mode=display">
+d^2~~~ 2cd~~~c^2+2bd~~~2ad+2bc~~~2ac+b^2~~~2ab~~~a^2~~~1~~~k_1\cdots k_4 \begin{bmatrix}
+ 1 &  &  &  &    &  &  & x_1^0 &\cdots  &  &x_4^0 \\
+  &  & \ddots   &  &  &  &  & \vdots & \vdots &  &\vdots \\
+  &  &  &  &    & 1 &  & x_1^6 &\cdots  &  &x_4^6 \\
+  &  &  &  &    &  & 2^{256} & -y_1 &\cdots  &  &-y_4 \\
+  &  &  &  &    &  &  & p &  &  & \\
+  &  &  &  &    &  &  &  & \ddots &  & \\
+  &  &  &  &    &  &  &  &  &  &p
+\end{bmatrix}=d^2~~~ 2cd~~~c^2+2bd~~~2ad+2bc~~~2ac+b^2~~~2ab~~~a^2~~~2^{256}~~~-t_1\cdots -t_4</script><p>这里直接求的d似乎不准确，不能直接用做<code>key</code>求来<code>AES</code>求<code>flag</code>，所幸 求出 <code>a、b、c</code>再求出的<code>d</code>是可以的</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240315223427538.png" alt="image-20240315223427538"></p>
+<p><code>LLL</code>算法功能暂且一张截图，后面或许会总结，到时候再写上去，如果不总结，那就。。。。</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> libnum, gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line">p = <span class="number">1018551160851728231474335384388576586031917743463656622083024684199383855595168341728561337234276243780407755294430553694832049089534855113774546001494743212076463713621965520780122783825100696968959866614846174188401153</span></span><br><span class="line">pairs = [(<span class="number">615358616404864757405587650175842125441380884418119777842292095751090237848084440177153221092040264723889917863863854377665802549748720692225139890884830475485512763149974948701807492663962748292710803434009673589337265</span>, <span class="number">84982753624462868217739962129526665082932464631118597651920986288766037499319751354013335054886685186857222944776560264528363811382359242656883760986496856164448940929282013856762706210675691655747370624405968909408102</span>), (<span class="number">528363810186974800127873139379943131424126521611531830591311656948009967709310974894584084912262479395720199930206495204352231804549705720854271566421006481173043064265399467682307971910488405265826107365679757755866812</span>, <span class="number">496810092723839642457928776423789418365006215801711874210443222720529161066621876103037104247173440072986344011599384793861949574577559989016501090247331146721371126871470611440468688947950954988175225633457347666551944</span>), (<span class="number">68711183101845981499596464753252121346970486988311398916877579778110690480447199642602267233989256728822535174215153145632158860662954277116345331672194812126361911061449082917955000137698138358926301360506687271134873</span>, <span class="number">995428771589393162202488762223106955302099250561593105620410424291405842350539887383005328242236156038373244928147473800972534658018117705291472213770335998508454938607290279268848513727721410314612261163489156360908800</span>), (<span class="number">61574167546312883246262193556029081771904529137922128124933785599227801608271357738142074310192454183183340219301304405636497744152219785042075198056952749425345561162612590170550454476602892138914473795478531165181812</span>, <span class="number">618169326093802548516842299173393893046765466917311052414967158839652012130855552015876657514610755108820971877570295328618373296493668146691687291894702228119875561585283226588768969944781923428807766632578060221034862</span>)]</span><br><span class="line">ct = <span class="string">b&quot;|2\xf0v7\x05Y\x89\r]\xe93s\rr)#3\xe9\x90%Z\x9a\xd9\x9ck\xba\xec]q\xb8\xf2&#x27;\xc8e~fL\xcf\x93\x00\xd6^s-\xc9\xd6M&quot;</span></span><br><span class="line"></span><br><span class="line">L = Matrix(ZZ,<span class="number">12</span>,<span class="number">12</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">7</span>):</span><br><span class="line">    L[i,i]=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">L[<span class="number">7</span>,<span class="number">7</span>] = <span class="number">2</span>^<span class="number">256</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">7</span>):</span><br><span class="line">        L[j,<span class="number">8</span>+i]=pairs[i][<span class="number">0</span>]^j</span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">    L[<span class="number">7</span>,<span class="number">8</span>+i] = -pairs[i][<span class="number">1</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>,<span class="number">12</span>):</span><br><span class="line">        L[i,i] = p</span><br><span class="line"></span><br><span class="line">L = L.LLL()[<span class="number">1</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(L))</span><br><span class="line"></span><br><span class="line">a = <span class="built_in">int</span>(gmpy2.iroot(<span class="built_in">abs</span>(L[<span class="number">6</span>]), <span class="number">2</span>)[<span class="number">0</span>])</span><br><span class="line">b = <span class="built_in">abs</span>(L[<span class="number">5</span>])//(<span class="number">2</span>*a)</span><br><span class="line">c = (<span class="built_in">abs</span>(L[<span class="number">4</span>])-b^<span class="number">2</span>)//(<span class="number">2</span>*a)</span><br><span class="line">d = <span class="built_in">abs</span>(L[<span class="number">1</span>])//(<span class="number">2</span>*c)</span><br><span class="line">key = libnum.n2s(<span class="built_in">int</span>(d))</span><br><span class="line">cipher = AES.new(key=key, IV=<span class="built_in">bytes</span>(<span class="built_in">range</span>(<span class="number">16</span>)), mode=AES.MODE_CBC)</span><br><span class="line"><span class="built_in">print</span>(cipher.decrypt(ct))</span><br><span class="line"></span><br><span class="line"><span class="comment"># nkctf&#123;..escape..&#125;</span></span><br></pre></td></tr></table></figure>
+<p><span class="exturl" data-url="aHR0cHM6Ly9oYXJyeTA1OTcuY29tLzIwMjMvMDMvMzAvTktDVEYyMDIzLw==">NKCTF2023·Crypto WP | Harry’s Blog (harry0597.com)<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="EZshamir"><a href="#EZshamir" class="headerlink" title="EZshamir"></a>EZshamir</h2><blockquote>
+<p>Shamir + LWE</p>
+<p>task.sage</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> getrandbits</span><br><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256, md5</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.Padding <span class="keyword">import</span> pad</span><br><span class="line"><span class="keyword">from</span> secret <span class="keyword">import</span> flag</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Shamir</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, pbits, noise_bit, n, m</span>):</span><br><span class="line">        self.pbits = pbits</span><br><span class="line">        self.noise_bit = noise_bit</span><br><span class="line">        self.n = n</span><br><span class="line">        self.m = m</span><br><span class="line">        self.p = getPrime(pbits)</span><br><span class="line">        P.&lt;x&gt; = PolynomialRing(Zmod(self.p))</span><br><span class="line">        self.poly = P([bytes_to_long(sha256(os.urandom(<span class="number">32</span>)).digest()) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.n)])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sample</span>(<span class="params">self</span>):</span><br><span class="line">        t = getrandbits(self.pbits)</span><br><span class="line">        y = <span class="built_in">int</span>(self.poly(t))</span><br><span class="line">        noise = getrandbits(noise_bit)</span><br><span class="line">        <span class="keyword">return</span> (t, y | noise)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_msg</span>(<span class="params">self</span>):</span><br><span class="line">        res = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.m):</span><br><span class="line">            res.append(self.sample())</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">pbits = <span class="number">400</span></span><br><span class="line">noise_bit = <span class="number">32</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line">m = <span class="number">75</span></span><br><span class="line"></span><br><span class="line">shamir = Shamir(pbits, noise_bit, n, m)</span><br><span class="line">coefficient = shamir.poly()</span><br><span class="line">key = <span class="string">&quot;&quot;</span>.join([<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">list</span>(coefficient)[<span class="number">1</span>:]])</span><br><span class="line">key = md5(key.encode()).digest()</span><br><span class="line">aes = AES.new(key = key, mode = AES.MODE_ECB)</span><br><span class="line">ct = aes.encrypt(pad(flag, <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;data.txt&quot;</span>, <span class="string">&quot;w&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(<span class="built_in">str</span>(shamir.p)+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    f.write(<span class="built_in">str</span>(shamir.get_msg())+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">    f.write(<span class="built_in">str</span>(bytes_to_long(ct))+<span class="string">&#x27;\n&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>如果我们知道 LWE，就容易看出这题除了是Shamir，还涉及 LWE，低位加噪</p>
+<p>何为 LWE？看完这篇想必就有大概的认识</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xNTA5MjA1MDE=">初探全同态加密之二：格密码学与LWE问题 - 知乎 (zhihu.com)<i class="fa fa-external-link-alt"></i></span></p>
+<p>有点抽象，所以结合 <span class="exturl" data-url="aHR0cHM6Ly90YW5nY3V4aWFvamlrdWFpLnh5ei9wb3N0Lzc1OGRkMzNhLmh0bWw=">LWE | 糖醋小鸡块的blog (tangcuxiaojikuai.xyz)<i class="fa fa-external-link-alt"></i></span> 一起食用</p>
+<p><strong>给定矩阵A以及带有误差的乘积$Ax+e$，还原出未知的向量x。</strong> </p>
+<script type="math/tex; mode=display">
+\vec{b} =A\vec{x}+\vec{e}</script><p>其中e是我们在一个<strong>固定数值范围内随机采集的一个随机噪音向量</strong> ，在模p下要显得数量级较小 </p>
+<p>带上了噪音之后，这个问题就变成了已知一个矩阵A，和它与一个向量x相乘得到的乘积再加上一定的<strong>误差（error）</strong>e，即Ax+e，如何有效的<strong>还原（learn）未知的向量，我们把这一类的问题统称为误差还原（Learning With Error， LWE）问题</strong> </p>
+<hr>
+<p>结合 <code>LWE</code>，我们可以得到如下多项式：</p>
+<script type="math/tex; mode=display">
+a_0+a_1x_i+a_2x_i^2+\dots+a_{n-1}x_i^{n-1} +e_i=b_i \pmod p</script><p>这里 <code>xi = t，bi = y | noise</code>  </p>
+<p>转换一下：</p>
+<script type="math/tex; mode=display">
+x_{75\times 100}A_{100\times 1}+e_{75\times 1}=b_{75\times 1}</script><p>构造矩阵如下：</p>
+<script type="math/tex; mode=display">
+(a_0~~~a_1~~~\dots ~~~a_{99}~~~1~~~l_0~~~l_1~~~\dots~~~l_{99})\begin{bmatrix}
+ 1 &  &  &  &    &  &  & x_1^0 &\cdots  &  &x_{75}^0 \\
+  &  & \ddots   &  &  &  &  & \vdots & \vdots &  &\vdots \\
+  &  &  &  &    & 1 &  & x_{1}^{99} &\cdots  &  &x_{75}^{99} \\
+  &  &  &  &    &  & K & -b_1 &\cdots  &  &-b_{75} \\
+  &  &  &  &    &  &  & p &  &  & \\
+  &  &  &  &    &  &  &  & \ddots &  & \\
+  &  &  &  &    &  &  &  &  &  &p
+\end{bmatrix}=(a_0~~~a_1~~~\dots ~~~a_{99}~~~K~~~e_0~~~e_1~~~\dots~~~e_{74})</script><p>为了写的方便点：</p>
+<script type="math/tex; mode=display">
+(a_0~~~a_1~~~\dots ~~~a_{99}~~~1~~~l_0~~~l_1~~~\dots~~~l_{99})\begin{bmatrix}
+x_1^0 &\cdots  &x_{75}^0 &  1 &  &  &          \\
+\vdots & \vdots  &\vdots  &  & \ddots   &  &      \\
+x_{1}^{99} &\cdots   &x_{75}^{99}  &  &   & 1 &  \\
+-b_1 &\cdots    &-b_{75}  &  &  &  &     K  \\
+ p &  &  &   &  &  &    \\
+& \ddots &  &   &  &  &    \\
+  &  & p &  &    &  &  
+\end{bmatrix}=(e_1~~~e_2~~~\dots~~~e_{75}~~~a_0~~~a_1~~~\dots ~~~a_{99}~~~K)</script><h3 id="exp"><a href="#exp" class="headerlink" title="exp:"></a>exp:</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256, md5</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">flatter</span>(<span class="params">M</span>):</span><br><span class="line">    <span class="keyword">from</span> subprocess <span class="keyword">import</span> check_output</span><br><span class="line">    <span class="keyword">from</span> re <span class="keyword">import</span> findall</span><br><span class="line">    <span class="comment"># compile https://github.com/keeganryan/flatter and put it in $PATH</span></span><br><span class="line">    z = <span class="string">&quot;[[&quot;</span> + <span class="string">&quot;]\n[&quot;</span>.join(<span class="string">&quot; &quot;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>, row)) <span class="keyword">for</span> row <span class="keyword">in</span> M) + <span class="string">&quot;]]&quot;</span></span><br><span class="line">    ret = check_output([<span class="string">&quot;flatter&quot;</span>], <span class="built_in">input</span>=z.encode())</span><br><span class="line">    <span class="keyword">return</span> matrix(M.nrows(), M.ncols(), <span class="built_in">map</span>(<span class="built_in">int</span>, findall(<span class="string">b&quot;-?\\d+&quot;</span>, ret)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f = (f.read().encode().split(<span class="string">b&#x27;\n&#x27;</span>)[:-<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">p = <span class="built_in">eval</span>(f[<span class="number">0</span>])</span><br><span class="line">msg = <span class="built_in">eval</span>(f[<span class="number">1</span>])</span><br><span class="line">ct = <span class="built_in">eval</span>(f[<span class="number">2</span>])</span><br><span class="line">ct = long_to_bytes(ct)</span><br><span class="line"></span><br><span class="line">pbits = <span class="number">400</span></span><br><span class="line">noise_bit = <span class="number">32</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line">m = <span class="number">75</span></span><br><span class="line"></span><br><span class="line">X = []</span><br><span class="line">B = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> msg:</span><br><span class="line">    X.append(i[<span class="number">0</span>])</span><br><span class="line">    B.append(i[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">L = matrix(ZZ,m+<span class="number">1</span>+n,m+<span class="number">1</span>+n)</span><br><span class="line"></span><br><span class="line">K = <span class="number">2</span>**<span class="number">256</span></span><br><span class="line">Kn = <span class="number">2</span>**(<span class="number">256</span>-noise_bit)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        L[j,i] = <span class="built_in">pow</span>(X[i],j,p)</span><br><span class="line">    L[n,i] = B[i]</span><br><span class="line">    L[i+n+<span class="number">1</span>,i] = p</span><br><span class="line"></span><br><span class="line">L = Kn*L </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    L[i,i+m] = <span class="number">1</span></span><br><span class="line">L[n,-<span class="number">1</span>] = K</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LL = flatter(L)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> LL:</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">abs</span>(i[-<span class="number">1</span>]) == K:</span><br><span class="line">        res = [<span class="built_in">abs</span>(j) <span class="keyword">for</span> j <span class="keyword">in</span> i[-n:-<span class="number">1</span>]]</span><br><span class="line">        key = <span class="string">&#x27;&#x27;</span>.join([<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> res])</span><br><span class="line">        key = md5(key.encode()).digest()</span><br><span class="line">        aes = AES.new(key=key, mode=AES.MODE_ECB)</span><br><span class="line">        <span class="built_in">print</span>(aes.decrypt(ct))</span><br><span class="line"></span><br><span class="line"><span class="comment"># DASCTF&#123;3617af36-7869-6939-3a09-bb8038aea171&#125;</span></span><br></pre></td></tr></table></figure>
+<p><strong>井然有条</strong> 糖醋小鸡块师傅：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha256, md5</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> check_output</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">flatter</span>(<span class="params">M</span>):</span><br><span class="line">    <span class="comment"># compile https://github.com/keeganryan/flatter and put it in $PATH </span></span><br><span class="line">    z = <span class="string">&quot;[[&quot;</span> + <span class="string">&quot;]\n[&quot;</span>.join(<span class="string">&quot; &quot;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>, row)) <span class="keyword">for</span> row <span class="keyword">in</span> M) + <span class="string">&quot;]]&quot;</span> </span><br><span class="line">    ret = check_output([<span class="string">&quot;flatter&quot;</span>], <span class="built_in">input</span>=z.encode()) </span><br><span class="line">    <span class="keyword">from</span> re <span class="keyword">import</span> findall </span><br><span class="line">    <span class="keyword">return</span> matrix(M.nrows(), M.ncols(), <span class="built_in">map</span>(<span class="built_in">int</span>, findall(<span class="string">b&quot;-?\\d+&quot;</span>, ret))) </span><br><span class="line"></span><br><span class="line">pbits = <span class="number">400</span></span><br><span class="line">noise_bit = <span class="number">32</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line">m = <span class="number">75</span></span><br><span class="line">p = </span><br><span class="line">msgs = </span><br><span class="line">ct = </span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################### part1 construct</span></span><br><span class="line">A= []</span><br><span class="line">b = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">    temp = [msgs[i][<span class="number">0</span>]^j % p <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(n)]</span><br><span class="line">    A.append(temp)</span><br><span class="line">    b.append(msgs[i][<span class="number">1</span>])</span><br><span class="line">A = Matrix(ZZ,A)</span><br><span class="line">b = vector(ZZ,b)</span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################### part2 LLL</span></span><br><span class="line"><span class="comment">#primal_attack1</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">primal_attack1</span>(<span class="params">A,b,m,n,p,esz</span>):</span><br><span class="line">    L = block_matrix(</span><br><span class="line">        [</span><br><span class="line">            [matrix.identity(m)*p,matrix.zero(m, n+<span class="number">1</span>)],</span><br><span class="line">            [(matrix(A).T).stack(-vector(b)).change_ring(ZZ),matrix.identity(n+<span class="number">1</span>)],</span><br><span class="line">        ]</span><br><span class="line">    )</span><br><span class="line">    <span class="built_in">print</span>(L.dimensions())</span><br><span class="line">    Q = diagonal_matrix([<span class="number">2</span>^<span class="number">256</span>//esz]*m + [<span class="number">1</span>]*n + [<span class="number">2</span>^<span class="number">256</span>])</span><br><span class="line">    L *= Q</span><br><span class="line">    L = flatter(L)</span><br><span class="line">    L /= Q</span><br><span class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> L:</span><br><span class="line">        <span class="keyword">if</span>(res[-<span class="number">1</span>] == <span class="number">1</span>):</span><br><span class="line">            s = vector(GF(p), res[-n-<span class="number">1</span>:-<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">return</span> s</span><br><span class="line">        <span class="keyword">elif</span>(res[-<span class="number">1</span>] == -<span class="number">1</span>):</span><br><span class="line">            s = -vector(GF(p), res[-n-<span class="number">1</span>:-<span class="number">1</span>])</span><br><span class="line">            <span class="keyword">return</span> s</span><br><span class="line">        </span><br><span class="line">res = primal_attack1(A,b,m,n,p,<span class="number">2</span>^<span class="number">32</span>)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br><span class="line"></span><br><span class="line">key = <span class="string">&quot;&quot;</span>.join([<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">list</span>(res)[<span class="number">1</span>:]])</span><br><span class="line">key = md5(key.encode()).digest()</span><br><span class="line">aes = AES.new(key = key, mode = AES.MODE_ECB)</span><br><span class="line">flag = aes.decrypt(long_to_bytes(ct))</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wbuildings
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/" title="Shamir门限方案">https://wbuildings.github.io/Crypto/Shamir门限方案/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag"><i class="fa fa-tag"></i> 密码知识</a>
+              <a href="/tags/Shamir/" rel="tag"><i class="fa fa-tag"></i> Shamir</a>
+              <a href="/tags/LWE/" rel="tag"><i class="fa fa-tag"></i> LWE</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Crypto/DASCTF-2024%E6%9A%91%E6%9C%9F%E6%8C%91%E6%88%98%E8%B5%9B/" rel="prev" title="DASCTF 2024暑期挑战赛">
+      <i class="fa fa-chevron-left"></i> DASCTF 2024暑期挑战赛
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Crypto/LFSR%E5%88%9D%E6%8E%A2/" rel="next" title="LFSR初探">
+      LFSR初探 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Shamir%E7%A7%98%E5%AF%86%E5%85%B1%E4%BA%AB%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">Shamir秘密共享方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%90%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E7%AE%97%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">子密钥生成算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D%E7%A7%98%E5%AF%86%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">恢复秘密过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">2.3.</span> <span class="nav-text">References:</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NKCTF2023-Raven"><span class="nav-number">3.1.</span> <span class="nav-text">[NKCTF2023] Raven</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E8%A7%A3%EF%BC%9A"><span class="nav-number">3.1.1.</span> <span class="nav-text">题解：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EZshamir"><span class="nav-number">3.2.</span> <span class="nav-text">EZshamir</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#exp"><span class="nav-number">3.2.1.</span> <span class="nav-text">exp:</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wbuildings"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wbuildings</p>
+  <div class="site-description" itemprop="description">须知少年凌云志，曾许人间第一流</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- recent posts -->
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DSA/" rel="tag">DSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dual-RSA/" rel="tag">Dual RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNP/" rel="tag">HNP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFSR/" rel="tag">LFSR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LWE/" rel="tag">LWE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lattice/" rel="tag">Lattice</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MITM/" rel="tag">MITM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MT19937/" rel="tag">MT19937</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shamir/" rel="tag">Shamir</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sylvester/" rel="tag">Sylvester</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%85%83copper/" rel="tag">二元copper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag">密码知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9B%B2%E7%BA%BF/" rel="tag">曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%AE%B0/" rel="tag">杂记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A0%E6%95%B0/" rel="tag">素数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag">背包密码</a><span class="tag-list-count">2</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wbuildings</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">15:23</span>
+</div>
+
+  <script>
+    var OriginTitle = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '(*^▽^*)我藏好了哦~' + OriginTitle;
+        clearTimeout(titleTime);
+      } else {
+        document.title = 'q(≧▽≦q)被你发现啦~' + OriginTitle;
+        titleTime = setTimeout(function() {
+          document.title = OriginTitle;
+        }, 2000);
+      }
+    });
+  </script>
+
+
+<script color="24,24,24" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://wbuildings.github.io/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/',]
+      });
+      });
+  </script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'apuSRwmMMe8HwB5WcdQuox47-gzGzoHsz',
+      appKey     : 'MS1uA9PBT4L62Jbrjbh0UEHT',
+      placeholder: "在这里写下你的评论吧！",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  <script async src="/js/love.min.js"></script>
+
+
+
+
+
+    </div>
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

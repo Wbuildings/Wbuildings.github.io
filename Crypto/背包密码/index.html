@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/font-awesome/css/font-awesome.min.css"/ media="defer" onload="this.media='all'">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wbuildings.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="醉漾轻舟，信流引到花深处。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="背包密码">
+<meta property="og:url" content="https://wbuildings.github.io/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/index.html">
+<meta property="og:site_name" content="W&#39;Blog">
+<meta property="og:description" content="醉漾轻舟，信流引到花深处。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images978279a04ee1a8a4ce588f6da353885.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322222051279.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322221045087.png">
+<meta property="article:published_time" content="2024-03-21T18:20:47.000Z">
+<meta property="article:modified_time" content="2024-07-25T12:11:40.144Z">
+<meta property="article:author" content="Wbuildings">
+<meta property="article:tag" content="背包密码">
+<meta property="article:tag" content="Lattice">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images978279a04ee1a8a4ce588f6da353885.png">
+
+<link rel="canonical" href="https://wbuildings.github.io/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>背包密码 | W'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <script defer src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">W'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Wbuildings的自勉小屋</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL1didWlsZGluZ3M=" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wbuildings.github.io/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Wbuildings">
+      <meta itemprop="description" content="须知少年凌云志，曾许人间第一流">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="W'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          背包密码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-22 02:20:47" itemprop="dateCreated datePublished" datetime="2024-03-22T02:20:47+08:00">2024-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>24k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>21 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>醉漾轻舟，信流引到花深处。</strong></p>
+<span id="more"></span>
+<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images978279a04ee1a8a4ce588f6da353885.png" alt="978279a04ee1a8a4ce588f6da353885"></p>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>私钥为一个超递增序列  $\left { a<em>n \right } $，满足 $a_i&gt;\sum</em>{k=1}^{i-1}a_k $</p>
+<p>模数 m，满足 $m&gt;\sum_{i=1}^{n}a_i$ </p>
+<p>乘数w，满足<code>gcd(w,m)=1</code>，</p>
+<p>公钥为  $ \left { b_i \right } $ ，满足 $b_i=wa_i \pmod m$ </p>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>设明文为 $ \left {  v_i \right } ，v_i\in\left { 0,1 \right } $，</p>
+<script type="math/tex; mode=display">
+c\equiv\sum_{i=1}^{n}b_iv_i \pmod m</script><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322222051279.png" alt="image-这渲染，也是醉了"></p>
+<h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><script type="math/tex; mode=display">
+v=w^{-1}c=\sum_{i=1}^{n}v_ia_i \pmod m</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">v = c * inverse(w,m) % m</span><br><span class="line"><span class="comment"># a = [pow(3, i) for i in range(64)]</span></span><br><span class="line"></span><br><span class="line">m = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> reverse(a):</span><br><span class="line">	<span class="keyword">if</span> v &gt;= i:</span><br><span class="line">        m = <span class="string">&#x27;1&#x27;</span> + m</span><br><span class="line">        v -= i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m</span><br></pre></td></tr></table></figure>
+<h2 id="造格"><a href="#造格" class="headerlink" title="造格"></a>造格</h2><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240322221045087.png" alt="image-20240322221045087"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line">math.log2(b)</span><br></pre></td></tr></table></figure>
+<h3 id="常规格："><a href="#常规格：" class="headerlink" title="常规格："></a>常规格：</h3><script type="math/tex; mode=display">
+L=\begin{bmatrix}
+ 1 &  &  &  & b_1\\
+  & 1 &  &  & b_2\\
+  &  & \ddots &  &\vdots \\
+  &  &  &  1&b_n \\
+  &  &  &  &-c
+\end{bmatrix}</script><p>因为$(v_1,v_2,\dots,v_n,1)L=(v_1,v_2,\dots,v_n,0)$，所以$v=(v_1,v_2,\dots,v_n,0)$是一个格点</p>
+<h3 id="优化格："><a href="#优化格：" class="headerlink" title="优化格："></a>优化格：</h3><script type="math/tex; mode=display">
+L=\begin{bmatrix}
+2 & 0 & ... & 0 & b_1\\
+0 & 2 & ... & 0 & b_2\\
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+0 & 0 & ... & 2 & b_n\\
+1 & 1 & ... & 1 & c
+\end{bmatrix}</script><p>$(v_1,v_2,\dots,v_n,-1)L=(2v_1-1,2v_2-1,\dots,2v_n-1,0)$</p>
+<hr>
+<p>先浅浅记录，后续更新</p>
+<hr>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="2023羊城杯-MCeorpkpleer"><a href="#2023羊城杯-MCeorpkpleer" class="headerlink" title="[2023羊城杯]MCeorpkpleer"></a>[2023羊城杯]MCeorpkpleer</h3><blockquote>
+<p>题目描述：这数据都不全要怎么计算呢？</p>
+<p>题目</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> secret <span class="keyword">import</span> flag</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pubkey</span>(<span class="params"><span class="built_in">list</span>, m, w</span>):</span><br><span class="line">    pubkey_list = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_bin)):</span><br><span class="line">        pubkey_list.append(w * <span class="built_in">list</span>[i] % m)</span><br><span class="line">    <span class="keyword">return</span> pubkey_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">e_cry</span>(<span class="params">e, pubkey</span>):</span><br><span class="line">    pubkey_list = pubkey</span><br><span class="line">    encode = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e)):</span><br><span class="line">        encode += pubkey_list[i] * <span class="built_in">int</span>(e[i]) % m</span><br><span class="line">    <span class="keyword">return</span> encode</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">1024</span>)</span><br><span class="line">q = getPrime(<span class="number">1024</span>)</span><br><span class="line">n = p * q</span><br><span class="line">e = getPrime(<span class="number">64</span>)</span><br><span class="line">m = bytes_to_long(flag)</span><br><span class="line">c = <span class="built_in">pow</span>(m, e, n)</span><br><span class="line"></span><br><span class="line">e_bin = (<span class="built_in">bin</span>(e))[<span class="number">2</span>:]</span><br><span class="line"><span class="built_in">list</span> = [<span class="built_in">pow</span>(<span class="number">3</span>, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_bin))]</span><br><span class="line">m = getPrime(<span class="built_in">len</span>(<span class="built_in">bin</span>(<span class="built_in">sum</span>(<span class="built_in">list</span>))) - <span class="number">1</span>)</span><br><span class="line">w = getPrime(<span class="number">64</span>)</span><br><span class="line">pubkey = pubkey(<span class="built_in">list</span>, m, w)</span><br><span class="line">en_e = e_cry(e_bin, pubkey)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;p = &#123;&#125;\n&#x27;</span></span><br><span class="line">      <span class="string">&#x27;n = &#123;&#125;\n&#x27;</span></span><br><span class="line">      <span class="string">&#x27;c = &#123;&#125;\n&#x27;</span></span><br><span class="line">      <span class="string">&#x27;pubkey = &#123;&#125;\n&#x27;</span></span><br><span class="line">      <span class="string">&#x27;en_e = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>((p &gt;&gt; <span class="number">435</span>) &lt;&lt; <span class="number">435</span>, n, c, pubkey, en_e))</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">p = 139540788452365306201344680691061363403552933527922544113532931871057569249632300961012384092481349965600565669315386312075890938848151802133991344036696488204791984307057923179655351110456639347861739783538289295071556484465877192913103980697449775104351723521120185802327587352171892429135110880845830815744</span></span><br><span class="line"><span class="string">n = 22687275367292715121023165106670108853938361902298846206862771935407158965874027802803638281495587478289987884478175402963651345721058971675312390474130344896656045501040131613951749912121302307319667377206302623735461295814304029815569792081676250351680394603150988291840152045153821466137945680377288968814340125983972875343193067740301088120701811835603840224481300390881804176310419837493233326574694092344562954466888826931087463507145512465506577802975542167456635224555763956520133324723112741833090389521889638959417580386320644108693480886579608925996338215190459826993010122431767343984393826487197759618771</span></span><br><span class="line"><span class="string">c = 156879727064293983713540449709354153986555741467040286464656817265584766312996642691830194777204718013294370729900795379967954637233360644687807499775502507899321601376211142933572536311131955278039722631021587570212889988642265055045777870448827343999745781892044969377246509539272350727171791700388478710290244365826497917791913803035343900620641430005143841479362493138179077146820182826098057144121231954895739989984846588790277051812053349488382941698352320246217038444944941841831556417341663611407424355426767987304941762716818718024107781873815837487744195004393262412593608463400216124753724777502286239464</span></span><br><span class="line"><span class="string">pubkey = [18143710780782459577, 54431132342347378731, 163293397027042136193, 489880191081126408579, 1469640573243379225737, 4408921719730137677211, 13226765159190413031633, 39680295477571239094899, 119040886432713717284697, 357122659298141151854091, 1071367977894423455562273, 3214103933683270366686819, 9642311801049811100060457, 28926935403149433300181371, 86780806209448299900544113, 260342418628344899701632339, 781027255885034699104897017, 2343081767655104097314691051, 7029245302965312291944073153, 21087735908895936875832219459, 63263207726687810627496658377, 189789623180063431882489975131, 569368869540190295647469925393, 1708106608620570886942409776179, 601827224419797931380408071500, 1805481673259393794141224214500, 893952418336266652976851386463, 2681857255008799958930554159389, 3523079163584485147344841221130, 1524252287869625983140881149316, 50264262166963219975822190911, 150792786500889659927466572733, 452378359502668979782399718199, 1357135078508006939347199154597, 4071405235524020818041597463791, 3169230503688232995231149877299, 462706308180869526799807117823, 1388118924542608580399421353469, 4164356773627825741198264060407, 3448085117999647764701149667147, 1299270151115113835209806487367, 3897810453345341505629419462101, 2648446157152195057994615872229, 3422845870014670444537026359650, 1223552407160181874717436564876, 3670657221480545624152309694628, 1966986461557807413563286569810, 1378466783231507511243038452393, 4135400349694522533729115357179, 3361215846199738142293703557463, 1038662335715384967987468158315, 3115987007146154903962404474945, 302975818554635252993570910761, 908927455663905758980712732283, 2726782366991717276942138196849, 3657854499533237101379593333510, 1928578295715881845245137486456, 1263242285705730806288591202331, 3789726857117192418865773606993, 2324195368467747797703678306905, 2450093503961328663664213663678, 2827787910442071261545819733997, 3960871129884299055190637944954, 2837628186769067706678271320788]</span></span><br><span class="line"><span class="string">en_e = 31087054322877663244023458448558</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="题解："><a href="#题解：" class="headerlink" title="题解："></a>题解：</h4><h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>超递增序列</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">list</span> = [<span class="built_in">pow</span>(<span class="number">3</span>, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_bin))]   <span class="comment"># len(e_bin) = 64</span></span><br></pre></td></tr></table></figure>
+<p>背包密码，上面常规格构造</p>
+<script type="math/tex; mode=display">
+(e_1,e_2,\dots,e_n,1)\begin{bmatrix}
+ 1 &  &  &  & b_1\\
+  & 1 &  &  & b_2\\
+  &  & \ddots &  &\vdots \\
+  &  &  &  1&b_n \\
+  &  &  &  &-c
+\end{bmatrix}=(e_1,e_2,\dots,e_n,0)</script><p>其中 $b_i，c$ 都是已知的，那直接就求得明文，也就是此处的<code>e</code>了</p>
+<p>还有一步是常规的已知p高位攻击</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">b = [<span class="number">18143710780782459577</span>, <span class="number">54431132342347378731</span>, <span class="number">163293397027042136193</span>, <span class="number">489880191081126408579</span>, <span class="number">1469640573243379225737</span>, <span class="number">4408921719730137677211</span>, <span class="number">13226765159190413031633</span>, <span class="number">39680295477571239094899</span>, <span class="number">119040886432713717284697</span>, <span class="number">357122659298141151854091</span>, <span class="number">1071367977894423455562273</span>, <span class="number">3214103933683270366686819</span>, <span class="number">9642311801049811100060457</span>, <span class="number">28926935403149433300181371</span>, <span class="number">86780806209448299900544113</span>, <span class="number">260342418628344899701632339</span>, <span class="number">781027255885034699104897017</span>, <span class="number">2343081767655104097314691051</span>, <span class="number">7029245302965312291944073153</span>, <span class="number">21087735908895936875832219459</span>, <span class="number">63263207726687810627496658377</span>, <span class="number">189789623180063431882489975131</span>, <span class="number">569368869540190295647469925393</span>, <span class="number">1708106608620570886942409776179</span>, <span class="number">601827224419797931380408071500</span>, <span class="number">1805481673259393794141224214500</span>, <span class="number">893952418336266652976851386463</span>, <span class="number">2681857255008799958930554159389</span>, <span class="number">3523079163584485147344841221130</span>, <span class="number">1524252287869625983140881149316</span>, <span class="number">50264262166963219975822190911</span>, <span class="number">150792786500889659927466572733</span>, <span class="number">452378359502668979782399718199</span>, <span class="number">1357135078508006939347199154597</span>, <span class="number">4071405235524020818041597463791</span>, <span class="number">3169230503688232995231149877299</span>, <span class="number">462706308180869526799807117823</span>, <span class="number">1388118924542608580399421353469</span>, <span class="number">4164356773627825741198264060407</span>, <span class="number">3448085117999647764701149667147</span>, <span class="number">1299270151115113835209806487367</span>, <span class="number">3897810453345341505629419462101</span>, <span class="number">2648446157152195057994615872229</span>, <span class="number">3422845870014670444537026359650</span>, <span class="number">1223552407160181874717436564876</span>, <span class="number">3670657221480545624152309694628</span>, <span class="number">1966986461557807413563286569810</span>, <span class="number">1378466783231507511243038452393</span>, <span class="number">4135400349694522533729115357179</span>, <span class="number">3361215846199738142293703557463</span>, <span class="number">1038662335715384967987468158315</span>, <span class="number">3115987007146154903962404474945</span>, <span class="number">302975818554635252993570910761</span>, <span class="number">908927455663905758980712732283</span>, <span class="number">2726782366991717276942138196849</span>, <span class="number">3657854499533237101379593333510</span>, <span class="number">1928578295715881845245137486456</span>, <span class="number">1263242285705730806288591202331</span>, <span class="number">3789726857117192418865773606993</span>, <span class="number">2324195368467747797703678306905</span>, <span class="number">2450093503961328663664213663678</span>, <span class="number">2827787910442071261545819733997</span>, <span class="number">3960871129884299055190637944954</span>, <span class="number">2837628186769067706678271320788</span>]</span><br><span class="line">c = <span class="number">31087054322877663244023458448558</span></span><br><span class="line"></span><br><span class="line">n = <span class="built_in">len</span>(b)</span><br><span class="line">L = Matrix(ZZ, n+<span class="number">1</span>, n+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    L[i,i] = <span class="number">1</span></span><br><span class="line">    L[i,-<span class="number">1</span>] = b[i]</span><br><span class="line">L[-<span class="number">1</span>,-<span class="number">1</span>] = -c</span><br><span class="line"></span><br><span class="line">res = L.LLL()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n + <span class="number">1</span>):</span><br><span class="line">    M = res.row(i).<span class="built_in">list</span>()       <span class="comment"># 取矩阵的每一行，转换成列表</span></span><br><span class="line">    flag = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">for</span> m <span class="keyword">in</span> M:</span><br><span class="line">        <span class="keyword">if</span> m != <span class="number">0</span> <span class="keyword">and</span> m != <span class="number">1</span>:   <span class="comment"># 背包密码的明文 v 不是 0 就是 1</span></span><br><span class="line">            flag = <span class="literal">False</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> flag:</span><br><span class="line">        e = M</span><br><span class="line">       </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e)):</span><br><span class="line">    e[i] = <span class="built_in">str</span>(e[i])</span><br><span class="line">e = <span class="string">&quot;&quot;</span>.join(e)[:-<span class="number">1</span>] 	<span class="comment"># 注意看上面构造格求出的结果，最后面多了一个0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">n = <span class="number">22687275367292715121023165106670108853938361902298846206862771935407158965874027802803638281495587478289987884478175402963651345721058971675312390474130344896656045501040131613951749912121302307319667377206302623735461295814304029815569792081676250351680394603150988291840152045153821466137945680377288968814340125983972875343193067740301088120701811835603840224481300390881804176310419837493233326574694092344562954466888826931087463507145512465506577802975542167456635224555763956520133324723112741833090389521889638959417580386320644108693480886579608925996338215190459826993010122431767343984393826487197759618771</span></span><br><span class="line">p0 = <span class="number">139540788452365306201344680691061363403552933527922544113532931871057569249632300961012384092481349965600565669315386312075890938848151802133991344036696488204791984307057923179655351110456639347861739783538289295071556484465877192913103980697449775104351723521120185802327587352171892429135110880845830815744</span></span><br><span class="line">c = <span class="number">156879727064293983713540449709354153986555741467040286464656817265584766312996642691830194777204718013294370729900795379967954637233360644687807499775502507899321601376211142933572536311131955278039722631021587570212889988642265055045777870448827343999745781892044969377246509539272350727171791700388478710290244365826497917791913803035343900620641430005143841479362493138179077146820182826098057144121231954895739989984846588790277051812053349488382941698352320246217038444944941841831556417341663611407424355426767987304941762716818718024107781873815837487744195004393262412593608463400216124753724777502286239464</span></span><br><span class="line"></span><br><span class="line">kbit = <span class="number">435</span></span><br><span class="line">PR.&lt;x&gt; = PolynomialRing(Zmod(n))</span><br><span class="line">f = p0+x</span><br><span class="line">x = f.small_roots(X=<span class="number">2</span>^kbit, beta=<span class="number">0.4</span>)</span><br><span class="line">p = p0+<span class="built_in">int</span>(x[<span class="number">0</span>])</span><br><span class="line">q = n//p</span><br><span class="line">e = <span class="built_in">int</span>(e,<span class="number">2</span>)</span><br><span class="line">d = inverse(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line"><span class="built_in">print</span>(long_to_bytes(<span class="built_in">int</span>(<span class="built_in">pow</span>(c,d,n))))</span><br><span class="line"></span><br><span class="line"><span class="comment"># DASCTF&#123;T81I_tPPS_6r7g_xlPi_OO3M_6vyV_Rkba&#125;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>利用超递增序列的性质求出<code>e</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">m = getPrime(<span class="built_in">len</span>(<span class="built_in">bin</span>(<span class="built_in">sum</span>(<span class="built_in">list</span>))) - <span class="number">1</span>)</span><br><span class="line"><span class="built_in">list</span> = [<span class="built_in">pow</span>(<span class="number">3</span>, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_bin))]</span><br><span class="line">w = getPrime(<span class="number">64</span>)</span><br><span class="line">pubkey_list.append(w * <span class="built_in">list</span>[i] % m)</span><br></pre></td></tr></table></figure>
+<p>test：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> getPrime</span><br><span class="line"></span><br><span class="line">e = getPrime(<span class="number">64</span>)</span><br><span class="line">e_bin = <span class="built_in">bin</span>(e)[<span class="number">2</span>:]</span><br><span class="line"><span class="built_in">list</span> = [<span class="built_in">pow</span>(<span class="number">3</span>, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(e_bin))]</span><br><span class="line">m = getPrime(<span class="built_in">len</span>(<span class="built_in">bin</span>(<span class="built_in">sum</span>(<span class="built_in">list</span>))) - <span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(<span class="built_in">bin</span>(<span class="built_in">sum</span>(<span class="built_in">list</span>))) - <span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>模数<code>m</code>是比 超递增序列 <code>list</code> 的总和还要大的，本地测试可以发现 模数m是一个<code>102bit</code>的数，远比<code>64bit</code>的<code>w</code>大，所以可以直接求出 <code>w</code>为公钥的第一个数</p>
+<p><code>m</code>就直接<code>两项gcd</code>得出， $km=w*list_i-pubkey_i $  </p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c = <span class="number">31087054322877663244023458448558</span></span><br><span class="line">m = <span class="number">4522492601441914729446821257037</span></span><br><span class="line">w = <span class="number">18143710780782459577</span></span><br><span class="line"></span><br><span class="line">v = c * inverse(w, m) % m</span><br><span class="line">a = [<span class="built_in">pow</span>(<span class="number">3</span>, i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">64</span>)]</span><br><span class="line"></span><br><span class="line">m = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> a[::-<span class="number">1</span>]:</span><br><span class="line">    <span class="keyword">if</span> v &gt;= i:</span><br><span class="line">        m = <span class="string">&#x27;1&#x27;</span> + m</span><br><span class="line">        v -= i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m</span><br><span class="line"></span><br><span class="line">e = <span class="built_in">int</span>(m, <span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(e)</span><br><span class="line"><span class="comment"># 15960663600754919507</span></span><br></pre></td></tr></table></figure>
+<p>后续步骤同上</p>
+<h4 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h4><blockquote>
+<p>2024-07-20</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c = <span class="number">287687761937146187597379915545639385740275457170939564210821293233370716878150576</span></span><br><span class="line">key = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">87</span>, <span class="number">99</span>, <span class="number">190</span>, <span class="number">380</span>, <span class="number">760</span>, <span class="number">1702</span>, <span class="number">3350</span>, <span class="number">6712</span>, <span class="number">13302</span>, <span class="number">26669</span>, <span class="number">53257</span>, <span class="number">106512</span>, <span class="number">213212</span>, <span class="number">426262</span>, <span class="number">852583</span>, <span class="number">1705083</span>, <span class="number">3410164</span>, <span class="number">6820581</span>, <span class="number">13640909</span>, <span class="number">27281818</span>, <span class="number">54563749</span>, <span class="number">109127508</span>, <span class="number">218254958</span>, <span class="number">436509851</span>, <span class="number">873019897</span>, <span class="number">1746039768</span>, <span class="number">3492079367</span>, <span class="number">6984158992</span>, <span class="number">13968317822</span>, <span class="number">27936635563</span>, <span class="number">55873271257</span>, <span class="number">111746542368</span>, <span class="number">223493084736</span>, <span class="number">446986169472</span>, <span class="number">893972338944</span>, <span class="number">1787944677888</span>, <span class="number">3575889355776</span>, <span class="number">7151778711750</span>, <span class="number">14303557423366</span>, <span class="number">28607114846668</span>, <span class="number">57214229693336</span>, <span class="number">114428459386792</span>, <span class="number">228856918773559</span>, <span class="number">457713837547023</span>, <span class="number">915427675094046</span>, <span class="number">1830855350188252</span>, <span class="number">3661710700376344</span>, <span class="number">7323421400752912</span>, <span class="number">14646842801505675</span>, <span class="number">29293685603011275</span>, <span class="number">58587371206022773</span>, <span class="number">117174742412045483</span>, <span class="number">234349484824090806</span>, <span class="number">468698969648181659</span>, <span class="number">937397939296363271</span>, <span class="number">1874795878592726601</span>, <span class="number">3749591757185453143</span>, <span class="number">7499183514370906547</span>, <span class="number">14998367028741812852</span>, <span class="number">29996734057483625898</span>, <span class="number">59993468114967251756</span>, <span class="number">119986936229934503501</span>, <span class="number">239973872459869007099</span>, <span class="number">479947744919738013939</span>, <span class="number">959895489839476027878</span>, <span class="number">1919790979678952055983</span>, <span class="number">3839581959357904111739</span>, <span class="number">7679163918715808223719</span>, <span class="number">15358327837431616447319</span>, <span class="number">30716655674863232894717</span>, <span class="number">61433311349726465789458</span>, <span class="number">122866622699452931578804</span>, <span class="number">245733245398905863157495</span>, <span class="number">491466490797811726314990</span>, <span class="number">982932981595623452629980</span>, <span class="number">1965865963191246905260222</span>, <span class="number">3931731926382493810520182</span>, <span class="number">7863463852764987621040623</span>, <span class="number">15726927705529975242080987</span>, <span class="number">31453855411059950484161974</span>, <span class="number">62907710822119900968323970</span>, <span class="number">125815421644239801936647918</span>, <span class="number">251630843288479603873295836</span>, <span class="number">503261686576959207746591710</span>, <span class="number">1006523373153918415493183613</span>, <span class="number">2013046746307836830986367190</span>, <span class="number">4026093492615673661972734253</span>, <span class="number">8052186985231347323945468456</span>, <span class="number">16104373970462694647890936894</span>, <span class="number">32208747940925389295781874025</span>, <span class="number">64417495881850778591563748059</span>, <span class="number">128834991763701557183127495888</span>, <span class="number">257669983527403114366254991760</span>, <span class="number">515339967054806228732509983520</span>, <span class="number">1030679934109612457465019967093</span>, <span class="number">2061359868219224914930039934133</span>, <span class="number">4122719736438449829860079868450</span>, <span class="number">8245439472876899659720159736935</span>, <span class="number">16490878945753799319440319473651</span>, <span class="number">32981757891507598638880638947330</span>, <span class="number">65963515783015197277761277894728</span>, <span class="number">131927031566030394555522555789579</span>, <span class="number">263854063132060789111045111579109</span>, <span class="number">527708126264121578222090223158048</span>, <span class="number">1055416252528243156444180446316096</span>, <span class="number">2110832505056486312888360892632193</span>, <span class="number">4221665010112972625776721785264450</span>, <span class="number">8443330020225945251553443570528835</span>, <span class="number">16886660040451890503106887141057670</span>, <span class="number">33773320080903781006213774282115477</span>, <span class="number">67546640161807562012427548564230882</span>, <span class="number">135093280323615124024855097128461699</span>, <span class="number">270186560647230248049710194256923398</span>, <span class="number">540373121294460496099420388513846796</span>, <span class="number">1080746242588920992198840777027693592</span>, <span class="number">2161492485177841984397681554055387246</span>, <span class="number">4322984970355683968795363108110774528</span>, <span class="number">8645969940711367937590726216221549105</span>, <span class="number">17291939881422735875181452432443098117</span>, <span class="number">34583879762845471750362904864886196180</span>, <span class="number">69167759525690943500725809729772392360</span>, <span class="number">138335519051381887001451619459544784838</span>, <span class="number">276671038102763774002903238919089569616</span>, <span class="number">553342076205527548005806477838179139174</span>, <span class="number">1106684152411055096011612955676358278348</span>, <span class="number">2213368304822110192023225911352716556750</span>, <span class="number">4426736609644220384046451822705433113446</span>, <span class="number">8853473219288440768092903645410866226907</span>, <span class="number">17706946438576881536185807290821732453830</span>, <span class="number">35413892877153763072371614581643464907890</span>, <span class="number">70827785754307526144743229163286929815519</span>, <span class="number">141655571508615052289486458326573859631099</span>, <span class="number">283311143017230104578972916653147719262229</span>, <span class="number">566622286034460209157945833306295438524626</span>, <span class="number">1133244572068920418315891666612590877049074</span>, <span class="number">2266489144137840836631783333225181754098066</span>, <span class="number">4532978288275681673263566666450363508196132</span>, <span class="number">9065956576551363346527133332900727016392264</span>, <span class="number">18131913153102726693054266665801454032784553</span>, <span class="number">36263826306205453386108533331602908065569081</span>, <span class="number">72527652612410906772217066663205816131138180</span>, <span class="number">145055305224821813544434133326411632262276342</span>, <span class="number">290110610449643627088868266652823264524552684</span>, <span class="number">580221220899287254177736533305646529049105368</span>, <span class="number">1160442441798574508355473066611293058098210736</span>, <span class="number">2320884883597149016710946133222586116196421472</span>, <span class="number">4641769767194298033421892266445172232392842944</span>, <span class="number">9283539534388596066843784532890344464785686063</span>, <span class="number">18567079068777192133687569065780688929571371951</span>, <span class="number">37134158137554384267375138131561377859142743902</span>, <span class="number">74268316275108768534750276263122755718285487804</span>, <span class="number">148536632550217537069500552526245511436570975608</span>, <span class="number">297073265100435074139001105052491022873141951360</span>, <span class="number">594146530200870148278002210104982045746283902576</span>, <span class="number">1188293060401740296556004420209964091492567805360</span>, <span class="number">2376586120803480593112008840419928182985135610512</span>, <span class="number">4753172241606961186224017680839856365970271221024</span>, <span class="number">9506344483213922372448035361679712731940542442048</span>, <span class="number">19012688966427844744896070723359425463881084884096</span>, <span class="number">38025377932855689489792141446718850927762169768220</span>, <span class="number">76050755865711378979584282893437701855524339536412</span>, <span class="number">152101511731422757959168565786875403711048679072824</span>, <span class="number">304203023462845515918337131573750807422097358145648</span>, <span class="number">608406046925691031836674263147501614844194716291296</span>, <span class="number">1216812093851382063673348526295003229688389432582797</span>, <span class="number">2433624187702764127346697052590006459376778865165617</span>, <span class="number">4867248375405528254693394105180012918753557730331006</span>, <span class="number">9734496750811056509386788210360025837507115460662129</span>, <span class="number">19468993501622113018773576420720051675014230921324265</span>, <span class="number">38937987003244226037547152841440103350028461842648406</span>, <span class="number">77875974006488452075094305682880206700056923685296910</span>, <span class="number">155751948012976904150188611365760413400113847370593722</span>, <span class="number">311503896025953808300377222731520826800227694741187444</span>, <span class="number">623007792051907616600754445463041653600455389482374933</span>, <span class="number">1246015584103815233201508890926083307200910778964749821</span>, <span class="number">2492031168207630466403017781852166614401821557929499642</span>, <span class="number">4984062336415260932806035563704333228803643115858999284</span>, <span class="number">9968124672830521865612071127408666457607286231717998666</span>, <span class="number">19936249345661043731224142254817332915214572463435997301</span>, <span class="number">39872498691322087462448284509634665830429144926871994535</span>, <span class="number">79744997382644174924896569019269331660858289853743989190</span>, <span class="number">159489994765288349849793138038538663321716579707487978260</span>, <span class="number">318979989530576699699586276077077326643433159414975956596</span>, <span class="number">637959979061153399399172552154154653286866318829951913129</span>, <span class="number">1275919958122306798798345104308309306573732637659903826311</span>, <span class="number">2551839916244613597596690208616618613147465275319807652591</span>, <span class="number">5103679832489227195193380417233237226294930550639615305147</span>, <span class="number">10207359664978454390386760834466474452589861101279230610294</span>, <span class="number">20414719329956908780773521668932948905179722202558461220588</span>, <span class="number">40829438659913817561547043337865897810359444405116922441176</span>, <span class="number">81658877319827635123094086675731795620718888810233844882508</span>, <span class="number">163317754639655270246188173351463591241437777620467689764860</span>, <span class="number">326635509279310540492376346702927182482875555240935379529854</span>, <span class="number">653271018558621080984752693405854364965751110481870759059704</span>, <span class="number">1306542037117242161969505386811708729931502220963741518119363</span>, <span class="number">2613084074234484323939010773623417459863004441927483036238705</span>, <span class="number">5226168148468968647878021547246834919726008883854966072477346</span>, <span class="number">10452336296937937295756043094493669839452017767709932144954692</span>, <span class="number">20904672593875874591512086188987339678904035535419864289909384</span>, <span class="number">41809345187751749183024172377974679357808071070839728579818768</span>, <span class="number">83618690375503498366048344755949358715616142141679457159637536</span>, <span class="number">167237380751006996732096689511898717431232284283358914319275072</span>, <span class="number">334474761502013993464193379023797434862464568566717828638550144</span>, <span class="number">668949523004027986928386758047594869724929137133435657277100288</span>, <span class="number">1337899046008055973856773516095189739449858274266871314554200576</span>, <span class="number">2675798092016111947713547032190379478899716548533742629108401375</span>, <span class="number">5351596184032223895427094064380758957799433097067485258216802527</span>, <span class="number">10703192368064447790854188128761517915598866194134970516433605054</span>, <span class="number">21406384736128895581708376257523035831197732388269941032867210108</span>, <span class="number">42812769472257791163416752515046071662395464776539882065734420216</span>, <span class="number">85625538944515582326833505030092143324790929553079764131468840607</span>, <span class="number">171251077889031164653667010060184286649581859106159528262937681073</span>, <span class="number">342502155778062329307334020120368573299163718212319056525875362112</span>, <span class="number">685004311556124658614668040240737146598327436424638113051750724224</span>, <span class="number">1370008623112249317229336080481474293196654872849276226103501448448</span>, <span class="number">2740017246224498634458672160962948586393309745698552452207002896896</span>, <span class="number">5480034492448997268917344321925897172786619491397104904414005793914</span>, <span class="number">10960068984897994537834688643851794345573238982794209808828011587706</span>, <span class="number">21920137969795989075669377287703588691146477965588419617656023175412</span>, <span class="number">43840275939591978151338754575407177382292955931176839235312046350824</span>, <span class="number">87680551879183956302677509150814354764585911862353678470624092701691</span>, <span class="number">175361103758367912605355018301628709529171823724707356941248185403485</span>, <span class="number">350722207516735825210710036603257419058343647449414713882496370806824</span>, <span class="number">701444415033471650421420073206514838116687294898829427764992741613648</span>, <span class="number">1402888830066943300842840146413029676233374589797658855529985483227499</span>, <span class="number">2805777660133886601685680292826059352466749179595317711059970966454839</span>, <span class="number">5611555320267773203371360585652118704933498359190635422119941932909634</span>, <span class="number">11223110640535546406742721171304237409866996718381270844239883865819325</span>, <span class="number">22446221281071092813485442342608474819733993436762541688479767731638735</span>, <span class="number">44892442562142185626970884685216949639467986873525083376959535463277328</span>, <span class="number">89784885124284371253941769370433899278935973747050166753919070926554729</span>, <span class="number">179569770248568742507883538740867798557871947494100333507838141853109648</span>, <span class="number">359139540497137485015767077481735597115743894988200667015676283706219166</span>, <span class="number">718279080994274970031534154963471194231487789976401334031352567412438331</span>, <span class="number">1436558161988549940063068309926942388462975579952802668062705134824876530</span>, <span class="number">2873116323977099880126136619853884776925951159905605336125410269649753060</span>, <span class="number">5746232647954199760252273239707769553851902319811210672250820539299506381</span>, <span class="number">11492465295908399520504546479415539107703804639622421344501641078599012695</span>, <span class="number">22984930591816799041009092958831078215407609279244842689003282157198025444</span>, <span class="number">45969861183633598082018185917662156430815218558489685378006564314396050678</span>, <span class="number">91939722367267196164036371835324312861630437116979370756013128628792101318</span>, <span class="number">183879444734534392328072743670648625723260874233958741512026257257584202636</span>, <span class="number">367758889469068784656145487341297251446521748467917483024052514515168405272</span>, <span class="number">735517778938137569312290974682594502893043496935834966048105029030336810544</span>, <span class="number">1471035557876275138624581949365189005786086993871669932096210058060673621088</span>, <span class="number">2942071115752550277249163898730378011572173987743339864192420116121347242216</span>, <span class="number">5884142231505100554498327797460756023144347975486679728384840232242694484649</span>, <span class="number">11768284463010201108996655594921512046288695950973359456769680464485388969041</span>, <span class="number">23536568926020402217993311189843024092577391901946718913539360928970777938082</span>, <span class="number">47073137852040804435986622379686048185154783803893437827078721857941555876305</span>, <span class="number">94146275704081608871973244759372096370309567607786875654157443715883111752579</span>, <span class="number">188292551408163217743946489518744192740619135215573751308314887431766223505070</span>, <span class="number">376585102816326435487892979037488385481238270431147502616629774863532447010118</span>, <span class="number">753170205632652870975785958074976770962476540862295005233259549727064894020344</span>, <span class="number">1506340411265305741951571916149953541924953081724590010466519099454129788040580</span>, <span class="number">3012680822530611483903143832299907083849906163449180020933038198908259576081160</span>, <span class="number">6025361645061222967806287664599814167699812326898360041866076397816519152162452</span>, <span class="number">12050723290122445935612575329199628335399624653796720083732152795633038304324883</span>, <span class="number">24101446580244891871225150658399256670799249307593440167464305591266076608649853</span>, <span class="number">48202893160489783742450301316798513341598498615186880334928611182532153217299508</span>, <span class="number">96405786320979567484900602633597026683196997230373760669857222365064306434599262</span>, <span class="number">192811572641959134969801205267194053366393994460747521339714444730128612869198530</span>, <span class="number">385623145283918269939602410534388106732787988921495042679428889460257225738396863</span>]</span><br><span class="line"></span><br><span class="line">m = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> key[::-<span class="number">1</span>]:</span><br><span class="line">    <span class="keyword">if</span> c &gt;= i:</span><br><span class="line">        m = <span class="string">&#x27;1&#x27;</span> + m</span><br><span class="line">        c -= i</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        m = <span class="string">&#x27;0&#x27;</span> + m</span><br><span class="line"></span><br><span class="line">flag = long_to_bytes(<span class="built_in">int</span>(m[:-<span class="number">1</span>],<span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"><span class="comment"># DASCTF&#123;you_kn0w_b@ckpack_Crypt0?&#125;</span></span><br><span class="line"></span><br><span class="line">m= [m[i:i + <span class="number">8</span>] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(m), <span class="number">8</span>)]</span><br><span class="line">decoded_string = <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">chr</span>(<span class="built_in">int</span>(<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>, byte)), <span class="number">2</span>)) <span class="keyword">for</span> byte <span class="keyword">in</span> m)</span><br><span class="line"><span class="built_in">print</span>(decoded_string)</span><br></pre></td></tr></table></figure>
+<p>flag 的长度 是 264 ，key 的长度是265，多了一位。。。</p>
+<p>用厨子有奇效，就不用注意多出来的01了，也可以手动处理，如上</p>
+<p>（int 似乎默认是从后面开始数八位来转换）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flag = long_to_bytes(<span class="built_in">int</span>(m+<span class="string">&#x27;0&#x27;</span>*<span class="number">7</span>,<span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line"><span class="comment"># b&#x27;DASCTF&#123;you_kn0w_b@ckpack_Crypt0?&#125;\x00&#x27;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>背包密码的密度为：</p>
+<script type="math/tex; mode=display">
+d = \frac{n}{\log_{2}{\max(a_i)}}</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Sanity check for application of low density attack</span></span><br><span class="line">d = n / log(<span class="built_in">max</span>(a), <span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(CDF(d))</span><br><span class="line"><span class="keyword">assert</span> CDF(d) &lt; <span class="number">0.9408</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Reference："><a href="#Reference：" class="headerlink" title="Reference："></a>Reference：</h2><p><span class="exturl" data-url="aHR0cHM6Ly9qYXl4di5naXRodWIuaW8vMjAyMC8wNi8wOC/lr4bnoIHlrablrabkuaDnrJTorrDkuYtrbmFwc2Fjay8=">密码学学习笔记 之 knapsack | Van1sh的小屋 (jayxv.github.io)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXh0ZXJqaWUuZ2l0aHViLmlvLzIwMjMvMDgvMDIv6IOM5YyF5a+G56CBLyPog4zljIXpl67popjpgJrop6M=">背包密码 | DexterJie’Blog<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9sYXp6emFyby5naXRodWIuaW8vMjAyMC8wNS8xMy9jcnlwdG8t5YW25LuW5Yqg5a+G566X5rOVL2luZGV4Lmh0bWw=">其他加密算法 | Lazzaro (lazzzaro.github.io)<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wbuildings
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wbuildings.github.io/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" title="背包密码">https://wbuildings.github.io/Crypto/背包密码/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> 背包密码</a>
+              <a href="/tags/Lattice/" rel="tag"><i class="fa fa-tag"></i> Lattice</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Crypto/MT19937%E5%AE%9E%E6%88%98/" rel="prev" title="MT19937实战">
+      <i class="fa fa-chevron-left"></i> MT19937实战
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Crypto/%E7%AC%AC%E4%B8%80%E5%B1%8A%E5%B8%95%E9%B2%81%E6%9D%AF-CTF%E6%8C%91%E6%88%98%E8%B5%9B/" rel="next" title="第一届帕鲁杯-CTF挑战赛">
+      第一届帕鲁杯-CTF挑战赛 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">整体流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86"><span class="nav-number">3.</span> <span class="nav-text">加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%AF%86"><span class="nav-number">4.</span> <span class="nav-text">解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%A0%E6%A0%BC"><span class="nav-number">5.</span> <span class="nav-text">造格</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E6%A0%BC%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">常规格：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%A0%BC%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">优化格：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2023%E7%BE%8A%E5%9F%8E%E6%9D%AF-MCeorpkpleer"><span class="nav-number">6.1.</span> <span class="nav-text">[2023羊城杯]MCeorpkpleer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">Reference：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wbuildings"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wbuildings</p>
+  <div class="site-description" itemprop="description">须知少年凌云志，曾许人间第一流</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- recent posts -->
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DSA/" rel="tag">DSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dual-RSA/" rel="tag">Dual RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNP/" rel="tag">HNP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFSR/" rel="tag">LFSR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LWE/" rel="tag">LWE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lattice/" rel="tag">Lattice</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MITM/" rel="tag">MITM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MT19937/" rel="tag">MT19937</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shamir/" rel="tag">Shamir</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sylvester/" rel="tag">Sylvester</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%85%83copper/" rel="tag">二元copper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag">密码知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9B%B2%E7%BA%BF/" rel="tag">曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%AE%B0/" rel="tag">杂记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A0%E6%95%B0/" rel="tag">素数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag">背包密码</a><span class="tag-list-count">2</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wbuildings</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">15:23</span>
+</div>
+
+  <script>
+    var OriginTitle = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '(*^▽^*)我藏好了哦~' + OriginTitle;
+        clearTimeout(titleTime);
+      } else {
+        document.title = 'q(≧▽≦q)被你发现啦~' + OriginTitle;
+        titleTime = setTimeout(function() {
+          document.title = OriginTitle;
+        }, 2000);
+      }
+    });
+  </script>
+
+
+<script color="24,24,24" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://wbuildings.github.io/Crypto/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/',]
+      });
+      });
+  </script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'apuSRwmMMe8HwB5WcdQuox47-gzGzoHsz',
+      appKey     : 'MS1uA9PBT4L62Jbrjbh0UEHT',
+      placeholder: "在这里写下你的评论吧！",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  <script async src="/js/love.min.js"></script>
+
+
+
+
+
+    </div>
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

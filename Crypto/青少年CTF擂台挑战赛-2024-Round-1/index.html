@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/font-awesome/css/font-awesome.min.css"/ media="defer" onload="this.media='all'">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wbuildings.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="裁红晕碧泪漫漫，南国春来正薄寒。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="青少年CTF擂台挑战赛 2024">
+<meta property="og:url" content="https://wbuildings.github.io/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/index.html">
+<meta property="og:site_name" content="W&#39;Blog">
+<meta property="og:description" content="裁红晕碧泪漫漫，南国春来正薄寒。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240302001229388.png">
+<meta property="article:published_time" content="2024-03-01T12:40:48.000Z">
+<meta property="article:modified_time" content="2024-04-13T16:42:16.217Z">
+<meta property="article:author" content="Wbuildings">
+<meta property="article:tag" content="Wp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240302001229388.png">
+
+<link rel="canonical" href="https://wbuildings.github.io/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>青少年CTF擂台挑战赛 2024 | W'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <script defer src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">W'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Wbuildings的自勉小屋</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL1didWlsZGluZ3M=" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wbuildings.github.io/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Wbuildings">
+      <meta itemprop="description" content="须知少年凌云志，曾许人间第一流">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="W'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          青少年CTF擂台挑战赛 2024
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-01 20:40:48" itemprop="dateCreated datePublished" datetime="2024-03-01T20:40:48+08:00">2024-03-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>裁红晕碧泪漫漫，南国春来正薄寒。</p>
+<span id="more"></span>
+<h2 id="解个方程"><a href="#解个方程" class="headerlink" title="解个方程"></a>解个方程</h2><blockquote>
+<p>附件：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">欢迎来到青少年CTF，领取你的题目，进行解答吧！这是一道数学题！！</span><br><span class="line">    p = <span class="number">131796279826572362789198483887918844987</span></span><br><span class="line">    q = <span class="number">212813126433495999444769247147571745937</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    d = ?</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line">p = <span class="number">105590796031792069228296861088668613199</span></span><br><span class="line">q = <span class="number">309030249180133795728627253958431161707</span></span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line"></span><br><span class="line">phi = (p-<span class="number">1</span>)*(q-<span class="number">1</span>)</span><br><span class="line">n = p*q</span><br><span class="line">d = libnum.invmod(e,phi)</span><br><span class="line"><span class="built_in">print</span>(d)</span><br><span class="line"><span class="comment"># qsnctf&#123;0c420fb0c4f9413bacfb330c3e38cd5a&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="ez-log"><a href="#ez-log" class="headerlink" title="ez_log"></a>ez_log</h2><blockquote>
+<p>附件：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> *</span><br><span class="line">flag=<span class="string">b&#x27;key&#123;xxxxxxx&#125;&#x27;</span></span><br><span class="line">m=bytes_to_long(flag)</span><br><span class="line">p=<span class="number">3006156660704242356836102321001016782090189571028526298055526061772989406357037170723984497344618257575827271367883545096587962708266010793826346841303043716776726799898939374985320242033037</span></span><br><span class="line">g=<span class="number">3</span></span><br><span class="line">c=<span class="built_in">pow</span>(g,m,p)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;c=&#x27;</span>,c)</span><br><span class="line"></span><br><span class="line">    c=<span class="number">399955120568766714244494710147207394147483586697776185703375836686594812969411326117285206600646072864764643896544476201688184202967909942594201819382588967162872519648931634693021713835780</span></span><br></pre></td></tr></table></figure>
+<p>dlp，<code>discrete_log</code> </p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line">p=<span class="number">3006156660704242356836102321001016782090189571028526298055526061772989406357037170723984497344618257575827271367883545096587962708266010793826346841303043716776726799898939374985320242033037</span></span><br><span class="line">g=<span class="number">3</span></span><br><span class="line">c=<span class="number">392722191346630497785992331947956973102113900367558069299580913635053758988734145621237606300202469596708376566758151332401431920899557595868566982920454655811878888907259092537852470710477</span></span><br><span class="line">    </span><br><span class="line">x1 = discrete_log(mod(c,p),mod(g,p)) </span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(x1)))</span><br><span class="line"><span class="comment"># key&#123;q96d1C&#125;</span></span><br><span class="line"><span class="comment"># qsnctf&#123;4876f24a784e403fb3a731ef74e509e6&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="四重加密"><a href="#四重加密" class="headerlink" title="四重加密"></a>四重加密</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">OFZW4Y3UMY======</span><br><span class="line">base64得到密钥  qsnctf</span><br><span class="line"></span><br><span class="line">&amp;<span class="comment">#122;&amp;#99;&amp;#121;&amp;#101;&amp;#123;&amp;#109;&amp;#120;&amp;#109;&amp;#101;&amp;#109;&amp;#116;&amp;#120;&amp;#114;&amp;#122;&amp;#116;&amp;#95;&amp;#108;&amp;#122;&amp;#98;&amp;#104;&amp;#97;&amp;#95;&amp;#107;&amp;#119;&amp;#109;&amp;#113;&amp;#122;&amp;#101;&amp;#99;&amp;#125;&amp;#124;&amp;#107;&amp;#101;&amp;#121;&amp;#61;&amp;#104;&amp;#101;&amp;#108;&amp;#108;&amp;#111;</span></span><br><span class="line"></span><br><span class="line">扔到厨子里：zcye&#123;mxmemtxrzt_lzbha_kwmqzec&#125;|key=hello</span><br><span class="line">维吉尼亚解密：synt&#123;yqitbfqnoi_xsxwp_wpifoqv&#125;</span><br><span class="line">凯撒密码：flag&#123;ldvgosdabv_kfkjc_jcvsbdi&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ezrsa"><a href="#ezrsa" class="headerlink" title="ezrsa"></a>ezrsa</h2><blockquote>
+<p>附件：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">flag = <span class="string">b&#x27;qsnctf&#123;xxx-xxxx-xxxx-xxxx-xxxxxxxxx&#125;&#x27;</span></span><br><span class="line">m = bytes_to_long(flag)</span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line">r = getPrime(<span class="number">512</span>)</span><br><span class="line">n = p * q * r</span><br><span class="line">leak = p * q</span><br><span class="line">e = <span class="number">0x10001</span></span><br><span class="line">c = <span class="built_in">pow</span>(m, e, n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;c = <span class="subst">&#123;c&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;n = <span class="subst">&#123;n&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;leak = <span class="subst">&#123;leak&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="comment"># c = 173595148273920891298949441727054328036798235134009407863895058729356993814829340513336567479145746034781201823694596731886346933549577879568197521436900228804336056005940048086898794965549472641334237175801757569154295743915744875800647234151498117718087319013271748204766997008772782882813572814296213516343420236873651060868227487925491016675461540894535563805130406391144077296854410932791530755245514034242725719196949258860635915202993968073392778882692892</span></span><br><span class="line"><span class="comment"># n = 1396260492498511956349135417172451037537784979103780135274615061278987700332528182553755818089525730969834188061440258058608031560916760566772742776224528590152873339613356858551518007022519033843622680128062108378429621960808412913676262141139805667510615660359775475558729686515755127570976326233255349428771437052206564497930971797497510539724340471032433502724390526210100979700467607197448780324427953582222885828678441579349835574787605145514115368144031247</span></span><br><span class="line"><span class="comment"># leak = 152254254502019783796170793516692965417859793325424454902983763285830332059600151137162944897787532369961875766745853731769162511788354655291037150251085942093411304833287510644995339391240164033052417935316876168953838783742499485868268986832640692657031861629721225482114382472324320636566226653243762620647</span></span><br></pre></td></tr></table></figure>
+<p>n 分解得到 r</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">c = <span class="number">173595148273920891298949441727054328036798235134009407863895058729356993814829340513336567479145746034781201823694596731886346933549577879568197521436900228804336056005940048086898794965549472641334237175801757569154295743915744875800647234151498117718087319013271748204766997008772782882813572814296213516343420236873651060868227487925491016675461540894535563805130406391144077296854410932791530755245514034242725719196949258860635915202993968073392778882692892</span></span><br><span class="line">n = <span class="number">1396260492498511956349135417172451037537784979103780135274615061278987700332528182553755818089525730969834188061440258058608031560916760566772742776224528590152873339613356858551518007022519033843622680128062108378429621960808412913676262141139805667510615660359775475558729686515755127570976326233255349428771437052206564497930971797497510539724340471032433502724390526210100979700467607197448780324427953582222885828678441579349835574787605145514115368144031247</span></span><br><span class="line">e = <span class="number">0x10001</span></span><br><span class="line">leak = <span class="number">152254254502019783796170793516692965417859793325424454902983763285830332059600151137162944897787532369961875766745853731769162511788354655291037150251085942093411304833287510644995339391240164033052417935316876168953838783742499485868268986832640692657031861629721225482114382472324320636566226653243762620647</span></span><br><span class="line">r = <span class="number">9170584408726584113673965972648240491689635118606416619099032606248549219208315227501144611402976054161705877934617690915635968224924300539749199425819801</span></span><br><span class="line"></span><br><span class="line">phi = r-<span class="number">1</span></span><br><span class="line">d = libnum.invmod(e,phi)</span><br><span class="line">m = <span class="built_in">pow</span>(c,d,r)</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(m))</span><br><span class="line"><span class="comment">#  qsnctf&#123;12ff81e0-7646-4a96-a7eb-6a509ec01c9e&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="factor1"><a href="#factor1" class="headerlink" title="factor1"></a>factor1</h2><blockquote>
+<p>附件：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = getPrime(<span class="number">512</span>)</span><br><span class="line">q = getPrime(<span class="number">512</span>)</span><br><span class="line">d = getPrime(<span class="number">256</span>)</span><br><span class="line">e = gmpy2.invert(d, (p**<span class="number">2</span> - <span class="number">1</span>) * (q**<span class="number">2</span> - <span class="number">1</span>))</span><br><span class="line">flag = <span class="string">&quot;qsnctf&#123;&quot;</span> + hashlib.md5(<span class="built_in">str</span>(p + q).encode()).hexdigest() + <span class="string">&quot;&#125;&quot;</span></span><br><span class="line"><span class="built_in">print</span>(e)</span><br><span class="line"><span class="built_in">print</span>(p * q)</span><br><span class="line"><span class="comment"># 4602579741478096718172697218991734057017874575484294836043557658035277770732473025335441717904100009903832353915404911860888652406859201203199117870443451616457858224082143505393843596092945634675849883286107358454466242110831071552006337406116884147391687266536283395576632885877802269157970812862013700574069981471342712011889330292259696760297157958521276388120468220050600419562910879539594831789625596079773163447643235584124521162320450208920533174722239029506505492660271016917768383199286913178821124229554263149007237679675898370759082438533535303763664408320263258144488534391712835778283152436277295861859</span></span><br><span class="line"><span class="comment"># 78665180675705390001452176028555030916759695827388719494705803822699938653475348982551790040292552032924503104351703419136483078949363470430486531014134503794074329285351511023863461560882297331218446027873891885693166833003633460113924956936552466354566559741886902240131031116897293107970411780310764816053</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>$e = d^{-1} \bmod{(p^2-1)(q^2-1) }$ </p>
+<p>$(p^2-1)(q^2-1)=p^2q^2-p^2-q^2+1$ </p>
+<p>因为 $p^2q^2$ 有2048bit了，$-p^2-q^2+1$ 可以抹掉</p>
+<p>就可以用 维纳攻击 求出 d了，</p>
+<p>最后一步就是 已知ed分解n了</p>
+<p>原理：<span class="exturl" data-url="aHR0cHM6Ly93d3cuZGktbWd0LmNvbS5hdS9yc2FfZmFjdG9yaXplX24uaHRtbA==">RSA: how to factorize N given ed<i class="fa fa-external-link-alt"></i></span> </p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240302001229388.png" alt="image-20240302001229388"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">continuedFra</span>(<span class="params">x, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算连分数</span></span><br><span class="line"><span class="string">    :param x: 分子</span></span><br><span class="line"><span class="string">    :param y: 分母</span></span><br><span class="line"><span class="string">    :return: 连分数列表</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cf = []</span><br><span class="line">    <span class="keyword">while</span> y:</span><br><span class="line">        cf.append(x // y)</span><br><span class="line">        x, y = y, x % y</span><br><span class="line">    <span class="keyword">return</span> cf</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gradualFra</span>(<span class="params">cf</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算传入列表最后的渐进分数</span></span><br><span class="line"><span class="string">    :param cf: 连分数列表</span></span><br><span class="line"><span class="string">    :return: 该列表最后的渐近分数</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    numerator = <span class="number">0</span></span><br><span class="line">    denominator = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> cf[::-<span class="number">1</span>]:</span><br><span class="line">        <span class="comment"># 这里的渐进分数分子分母要分开</span></span><br><span class="line">        numerator, denominator = denominator, x * denominator + numerator</span><br><span class="line">    <span class="keyword">return</span> numerator, denominator</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve_pq</span>(<span class="params">a, b, c</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用韦达定理解出pq，x^2−(p+q)∗x+pq=0</span></span><br><span class="line"><span class="string">    :param a:x^2的系数</span></span><br><span class="line"><span class="string">    :param b:x的系数</span></span><br><span class="line"><span class="string">    :param c:pq</span></span><br><span class="line"><span class="string">    :return:p，q</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    par = gmpy2.isqrt(b * b - <span class="number">4</span> * a * c)</span><br><span class="line">    <span class="keyword">return</span> (-b + par) // (<span class="number">2</span> * a), (-b - par) // (<span class="number">2</span> * a)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getGradualFra</span>(<span class="params">cf</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算列表所有的渐近分数</span></span><br><span class="line"><span class="string">    :param cf: 连分数列表</span></span><br><span class="line"><span class="string">    :return: 该列表所有的渐近分数</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    gf = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(cf) + <span class="number">1</span>):</span><br><span class="line">        gf.append(gradualFra(cf[:i]))</span><br><span class="line">    <span class="keyword">return</span> gf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wienerAttack</span>(<span class="params">e, n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    :param e:</span></span><br><span class="line"><span class="string">    :param n:</span></span><br><span class="line"><span class="string">    :return: 私钥d</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cf = continuedFra(e, n)</span><br><span class="line">    gf = getGradualFra(cf)</span><br><span class="line">    <span class="keyword">for</span> d, k <span class="keyword">in</span> gf:</span><br><span class="line">        <span class="keyword">if</span> k == <span class="number">0</span>: <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> (e * d - <span class="number">1</span>) % k != <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        phi = (e * d - <span class="number">1</span>) // k</span><br><span class="line">        p, q = solve_pq(<span class="number">1</span>, n - phi + <span class="number">1</span>, n)</span><br><span class="line">        <span class="keyword">if</span> p * q == n:</span><br><span class="line">            <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line">e = <span class="number">4602579741478096718172697218991734057017874575484294836043557658035277770732473025335441717904100009903832353915404911860888652406859201203199117870443451616457858224082143505393843596092945634675849883286107358454466242110831071552006337406116884147391687266536283395576632885877802269157970812862013700574069981471342712011889330292259696760297157958521276388120468220050600419562910879539594831789625596079773163447643235584124521162320450208920533174722239029506505492660271016917768383199286913178821124229554263149007237679675898370759082438533535303763664408320263258144488534391712835778283152436277295861859</span></span><br><span class="line">pq = <span class="number">78665180675705390001452176028555030916759695827388719494705803822699938653475348982551790040292552032924503104351703419136483078949363470430486531014134503794074329285351511023863461560882297331218446027873891885693166833003633460113924956936552466354566559741886902240131031116897293107970411780310764816053</span></span><br><span class="line"></span><br><span class="line">n = pq**<span class="number">2</span></span><br><span class="line">d=wienerAttack(e, n)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> md5</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">factor_with_ed</span>(<span class="params">e,d,n</span>):</span><br><span class="line">    p=<span class="number">1</span></span><br><span class="line">    q=<span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> p==<span class="number">1</span> <span class="keyword">and</span> q==<span class="number">1</span>:</span><br><span class="line">        k = e*d -<span class="number">1</span></span><br><span class="line">        g = random.randint(<span class="number">1</span>,n)</span><br><span class="line">        <span class="keyword">while</span> k%<span class="number">2</span>==<span class="number">0</span>:</span><br><span class="line">            k //= <span class="number">2</span></span><br><span class="line">            x = <span class="built_in">pow</span>(g,k,n)</span><br><span class="line">            <span class="keyword">if</span> x&gt;<span class="number">1</span> <span class="keyword">and</span> libnum.gcd(x-<span class="number">1</span>,n)&gt;<span class="number">1</span>:</span><br><span class="line">                p = libnum.gcd(x-<span class="number">1</span>,n)</span><br><span class="line">                q = n//p</span><br><span class="line">    <span class="keyword">return</span> p,q</span><br><span class="line"></span><br><span class="line">n = <span class="number">78665180675705390001452176028555030916759695827388719494705803822699938653475348982551790040292552032924503104351703419136483078949363470430486531014134503794074329285351511023863461560882297331218446027873891885693166833003633460113924956936552466354566559741886902240131031116897293107970411780310764816053</span></span><br><span class="line">e = <span class="number">4602579741478096718172697218991734057017874575484294836043557658035277770732473025335441717904100009903832353915404911860888652406859201203199117870443451616457858224082143505393843596092945634675849883286107358454466242110831071552006337406116884147391687266536283395576632885877802269157970812862013700574069981471342712011889330292259696760297157958521276388120468220050600419562910879539594831789625596079773163447643235584124521162320450208920533174722239029506505492660271016917768383199286913178821124229554263149007237679675898370759082438533535303763664408320263258144488534391712835778283152436277295861859</span></span><br><span class="line"></span><br><span class="line">p,q = factor_with_ed(e,d,n)</span><br><span class="line">flag = <span class="string">&quot;qsnctf&#123;&quot;</span> + md5(<span class="built_in">str</span>(p + q).encode()).hexdigest() + <span class="string">&quot;&#125;&quot;</span></span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line"><span class="comment"># qsnctf&#123;8072e8b2982bc729cc74ef58f1abc862&#125;</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wbuildings
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wbuildings.github.io/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/" title="青少年CTF擂台挑战赛 2024">https://wbuildings.github.io/Crypto/青少年CTF擂台挑战赛-2024-Round-1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Wp/" rel="tag"><i class="fa fa-tag"></i> Wp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Crypto/2023%E7%AC%AC%E5%85%AD%E5%B1%8A%E5%AE%89%E6%B4%B5%E6%9D%AF/" rel="prev" title="2023第六届安洵杯">
+      <i class="fa fa-chevron-left"></i> 2023第六届安洵杯
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Crypto/CBC-Padding-Oracle-Attack/" rel="next" title="CBC&Padding Oracle Attack">
+      CBC&Padding Oracle Attack <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E4%B8%AA%E6%96%B9%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">解个方程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ez-log"><span class="nav-number">2.</span> <span class="nav-text">ez_log</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E9%87%8D%E5%8A%A0%E5%AF%86"><span class="nav-number">3.</span> <span class="nav-text">四重加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ezrsa"><span class="nav-number">4.</span> <span class="nav-text">ezrsa</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#factor1"><span class="nav-number">5.</span> <span class="nav-text">factor1</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wbuildings"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wbuildings</p>
+  <div class="site-description" itemprop="description">须知少年凌云志，曾许人间第一流</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- recent posts -->
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DSA/" rel="tag">DSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dual-RSA/" rel="tag">Dual RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNP/" rel="tag">HNP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFSR/" rel="tag">LFSR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LWE/" rel="tag">LWE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lattice/" rel="tag">Lattice</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MITM/" rel="tag">MITM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MT19937/" rel="tag">MT19937</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shamir/" rel="tag">Shamir</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sylvester/" rel="tag">Sylvester</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%85%83copper/" rel="tag">二元copper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag">密码知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9B%B2%E7%BA%BF/" rel="tag">曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%AE%B0/" rel="tag">杂记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A0%E6%95%B0/" rel="tag">素数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag">背包密码</a><span class="tag-list-count">2</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wbuildings</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">15:23</span>
+</div>
+
+  <script>
+    var OriginTitle = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '(*^▽^*)我藏好了哦~' + OriginTitle;
+        clearTimeout(titleTime);
+      } else {
+        document.title = 'q(≧▽≦q)被你发现啦~' + OriginTitle;
+        titleTime = setTimeout(function() {
+          document.title = OriginTitle;
+        }, 2000);
+      }
+    });
+  </script>
+
+
+<script color="24,24,24" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://wbuildings.github.io/Crypto/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E6%93%82%E5%8F%B0%E6%8C%91%E6%88%98%E8%B5%9B-2024-Round-1/',]
+      });
+      });
+  </script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'apuSRwmMMe8HwB5WcdQuox47-gzGzoHsz',
+      appKey     : 'MS1uA9PBT4L62Jbrjbh0UEHT',
+      placeholder: "在这里写下你的评论吧！",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  <script async src="/js/love.min.js"></script>
+
+
+
+
+
+    </div>
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

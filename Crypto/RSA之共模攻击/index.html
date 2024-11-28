@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/font-awesome/css/font-awesome.min.css"/ media="defer" onload="this.media='all'">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wbuildings.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近遇到几种不同的共模攻击变形，记录一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RSA之共模攻击">
+<meta property="og:url" content="https://wbuildings.github.io/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="W&#39;Blog">
+<meta property="og:description" content="最近遇到几种不同的共模攻击变形，记录一下">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-07T17:57:24.000Z">
+<meta property="article:modified_time" content="2024-03-08T08:36:53.460Z">
+<meta property="article:author" content="Wbuildings">
+<meta property="article:tag" content="RSA">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://wbuildings.github.io/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>RSA之共模攻击 | W'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <script defer src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">W'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Wbuildings的自勉小屋</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL1didWlsZGluZ3M=" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wbuildings.github.io/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Wbuildings">
+      <meta itemprop="description" content="须知少年凌云志，曾许人间第一流">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="W'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RSA之共模攻击
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-08 01:57:24" itemprop="dateCreated datePublished" datetime="2024-03-08T01:57:24+08:00">2024-03-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>18k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近遇到几种不同的共模攻击变形，记录一下</p>
+<span id="more"></span>
+<h2 id="共模攻击"><a href="#共模攻击" class="headerlink" title="共模攻击"></a>共模攻击</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line">n= <span class="number">25333966058003377512707481338795714713737652659944601834182685873529702913988641983855700459996104700470621411559153944988952210084014634675583566338568882440708528997808798650962116756969822211586531522430245040013570571043385238601846104615050089457836721437790715225367971106085839523500735480715155424498941150468093083816830215632716244390679417218873179734276657411907216486790815037105108306055794473002315541787461904728375164737225486501009857299717749346279371251245318729951905832578739696926931502225899707226264570557623527701806829827566904224572897378639191756878049342203546309520458672464170859577433</span></span><br><span class="line">e1= <span class="number">2333</span></span><br><span class="line">c1= <span class="number">11355981897781478907853356911752561659125575027336719997290835661089901154031171698660586203170528368228850895159361637188990782030255983633790580700032092629587631108597144196551438410868034739981960656110887650747325311613900008001234835897835613759692146419080113176963747835592656185435741504176116672174539018089139547795447109458469225330809064539216773123671814859510069089532677704482026169178543062578686794346026774853085101278125763460212801929360456888869350105294595904940799522522144740464043605342348269086324747729288399275079874271519208155039364092577755518532799345651172433227745483422620900776136</span></span><br><span class="line">e2= <span class="number">23333</span></span><br><span class="line">c2= <span class="number">1326499538902841116411674554069945581390130048432351353260154261863309471312810811160302458644816390944833633923435634961251092531893503039914793217247984595331920909367627316087404934402312358642315675486438968585084964845763881078835787872160374025547400141298650794551970291119975344578667689961134814676553190178139842507675899262024572370313939107080072875068218336255452161407859907308656094331557912187788276334833723893856310434523337557011032081467262457427167978528280339494077785813461280853735266463152709443731638714219391773144349752633555310299318290576258086971373777118482642702020599928071855133041</span></span><br><span class="line"></span><br><span class="line">s,s1,s2 = gmpy2.gcdext(e1,e2)</span><br><span class="line">m = (<span class="built_in">pow</span>(c1,s1,n) * <span class="built_in">pow</span>(c2 ,s2 ,n)) % n</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(m)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag&#123;6ed4c74e022cb18c8039e96de93aa9ce&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="e1、e2不互素，开根的共模攻击"><a href="#e1、e2不互素，开根的共模攻击" class="headerlink" title="e1、e2不互素，开根的共模攻击"></a>e1、e2不互素，开根的共模攻击</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">import</span> libnum</span><br><span class="line"></span><br><span class="line">n= <span class="number">19006830358118902392432453595802675566730850352890246995920642811967821259388009049803513102750594524106471709641202019832682438027312468849299985832675191795417160553379580813410722359089872519372049229233732405993062464286888889084640878784209014165871696882564834896322508054231777967011195636564463806270998326936161449009988434249178477100127347406759932149010712091376183710135615375272671888541233275415737155953323133439644529709898791881795186775830217884663044495979067807418758455237701315019683802437323177125493076113419739827430282311018083976114158159925450746712064639569301925672742186294237113199023</span></span><br><span class="line">c1= <span class="number">276245243658976720066605903875366763552720328374098965164676247771817997950424168480909517684516498439306387133611184795758628248588201187138612090081389226321683486308199743311842513053259894661221013008371261704678716150646764446208833447643781574516045641493770778735363586857160147826684394417412837449465273160781074676966630398315417741542529612480836572205781076576325382832502694868883931680720558621770570349864399879523171995953720198118660355479626037129047327185224203109006251809257919143284157354935005710902589809259500117996982503679601132486140677013625335552533104471327456798955341220640782369529</span></span><br><span class="line">c2= <span class="number">11734019659226247713821792108026989060106712358397514827024912309860741729438494689480531875833287268454669859568719053896346471360750027952226633173559594064466850413737504267807599435679616522026241111887294138123201104718849744300769676961585732810579953221056338076885840743126397063074940281522137794340822594577352361616598702143477379145284687427705913831885493512616944504612474278405909277188118896882441812469679494459216431405139478548192152811441169176134750079073317011232934250365454908280676079801770043968006983848495835089055956722848080915898151352242215210071011331098761828031786300276771001839021</span></span><br><span class="line">e1=<span class="number">55</span></span><br><span class="line">e2=<span class="number">200</span></span><br><span class="line">s,s1,s2 = gmpy2.gcdext(e1,e2)</span><br><span class="line"><span class="built_in">print</span>(s)</span><br><span class="line">m = <span class="built_in">pow</span>(c1,s1,n)*<span class="built_in">pow</span>(c2,s2,n)%n</span><br><span class="line"><span class="built_in">print</span>(libnum.n2s(<span class="built_in">int</span>(libnum.nroot(m,s))))</span><br><span class="line"><span class="comment"># SICTF&#123;S0_Great_RSA_Have_Y0u_Learned?&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="黑盾杯-2020-Daylight"><a href="#黑盾杯-2020-Daylight" class="headerlink" title="[黑盾杯 2020]Daylight"></a>[黑盾杯 2020]Daylight</h2><blockquote>
+<p>附件</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">n =<span class="number">24030381175065789627867818021031309186965318861955402618375094156989560631225056400068280970357343617465261811691559275086986164901405512215968447835573713149231336594364799146504286982124850979481910739400555900516891562640944424296188089156508429086638459243074623801424444379741940400624550247210709108293164193827193821978694274672716764474152393429524314859853376325015012885883855819552203740904895242301492787682366135817255276597250505586595070110209229270379691148517421288247672403709484984083988966720494416926899250840012575481136166618973367329708626081023089829778864549053830890201012932527796486827519</span></span><br><span class="line">c1=<span class="number">7706442311376298907118381553814187694306437942337200300920018382827744477296762105669322390236380377042026460058526286493515418722731849971411879053724334926597860433790660568227623266459105700578574867980278136078799958698624620338469216407947276632981229373095281141319203245321172350378427449842394930055529441744690732690189155630980736716300509547085032174345753133838250340838995285142338255951756404101946977370148727459867175980397841996210997274012491629791252693401571504945522427861126234928419824136852180508014703063857673244567242488630499415730763245048617632714296374909199028722650732705222178007385</span></span><br><span class="line">c2=<span class="number">22423938730620301024336096061283705945892027623793660306239291359418958473934583979350384252488494023600239884048653436314101275290157972045454993641659471672605679497398173588217340705125922148550132426481727445141158741816240665812195493040369287582638492321538655028939958996384211181094086886177394010485535445009088322043647955338445795429449360349339936606800994026319620067195422963814641797851423046506617965736694331256799051468484280532276344029152140431817760731420316457245257243157665090587855008596785240088881665435451552191237548113820151383474872494353994135644477990413743416249730006854238049329690</span></span><br><span class="line">e1=<span class="number">35</span></span><br><span class="line">e2=<span class="number">42</span></span><br></pre></td></tr></table></figure>
+<h3 id="共模攻击开方解不出"><a href="#共模攻击开方解不出" class="headerlink" title="共模攻击开方解不出"></a>共模攻击开方解不出</h3><p>正常的 $e_1s_1 + e_2s_2 = gcd(e_1,e_2)=1$ ，于是 $m = m^{e_1s_1 + e_2s_2}=c_1^{s_1}c_2^{s_2} \bmod n$ </p>
+<p>但如果不互素的话，本题中 $gcd(e_1,e_2)=7$ ，则 $c_1^{s_1}c_2^{s_2}=(m^{7})^{as_1}(m^{7})^{bs_2}=m^7 \bmod n$</p>
+<p>所以 $m^7 = c_1^{s_1}c_2^{s_2} + kn$ </p>
+<p>这里就踩了一个坑，直接开7次方解不出来，就需要爆破一下 <code>k</code> </p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"></span><br><span class="line">n =<span class="number">24030381175065789627867818021031309186965318861955402618375094156989560631225056400068280970357343617465261811691559275086986164901405512215968447835573713149231336594364799146504286982124850979481910739400555900516891562640944424296188089156508429086638459243074623801424444379741940400624550247210709108293164193827193821978694274672716764474152393429524314859853376325015012885883855819552203740904895242301492787682366135817255276597250505586595070110209229270379691148517421288247672403709484984083988966720494416926899250840012575481136166618973367329708626081023089829778864549053830890201012932527796486827519</span></span><br><span class="line">c1=<span class="number">7706442311376298907118381553814187694306437942337200300920018382827744477296762105669322390236380377042026460058526286493515418722731849971411879053724334926597860433790660568227623266459105700578574867980278136078799958698624620338469216407947276632981229373095281141319203245321172350378427449842394930055529441744690732690189155630980736716300509547085032174345753133838250340838995285142338255951756404101946977370148727459867175980397841996210997274012491629791252693401571504945522427861126234928419824136852180508014703063857673244567242488630499415730763245048617632714296374909199028722650732705222178007385</span></span><br><span class="line">c2=<span class="number">22423938730620301024336096061283705945892027623793660306239291359418958473934583979350384252488494023600239884048653436314101275290157972045454993641659471672605679497398173588217340705125922148550132426481727445141158741816240665812195493040369287582638492321538655028939958996384211181094086886177394010485535445009088322043647955338445795429449360349339936606800994026319620067195422963814641797851423046506617965736694331256799051468484280532276344029152140431817760731420316457245257243157665090587855008596785240088881665435451552191237548113820151383474872494353994135644477990413743416249730006854238049329690</span></span><br><span class="line">e1=<span class="number">35</span></span><br><span class="line">e2=<span class="number">42</span></span><br><span class="line"></span><br><span class="line">t = gmpy2.gcd(e1,e2)</span><br><span class="line"><span class="keyword">if</span> t == <span class="number">1</span>:</span><br><span class="line">    s,x,y = gmpy2.gcdext(e1,e2)</span><br><span class="line">    m = (<span class="built_in">pow</span>(c1,x,n)*<span class="built_in">pow</span>(c2,y,n))%n</span><br><span class="line">    <span class="built_in">print</span>(long_to_bytes(m))</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    s,x,y = gmpy2.gcdext(e1,e2)</span><br><span class="line">    k = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="number">1</span>:</span><br><span class="line">        m = gmpy2.iroot((<span class="built_in">pow</span>(c1,x,n)*<span class="built_in">pow</span>(c2,y,n))%n +k*n,t)</span><br><span class="line">        <span class="keyword">if</span> m[<span class="number">1</span>]:</span><br><span class="line">            <span class="built_in">print</span>(long_to_bytes(m[<span class="number">0</span>]))</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            k += <span class="number">1</span></span><br><span class="line">            </span><br><span class="line"><span class="comment"># flag&#123;1_0nly_see_d4ylight_d4ylight&#125;</span></span><br></pre></td></tr></table></figure>
+<p>也可以用有限域开根：</p>
+<p>共模攻击求出的m等效于我们平时所见的 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d = libnum.invmod(e//<span class="number">6</span>,phi)</span><br><span class="line">c = <span class="built_in">pow</span>(c,d,n)</span><br></pre></td></tr></table></figure>
+<p>实际他们确实是相等的，都等于 <script type="math/tex">m^{gcd} \bmod n</script> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">n =<span class="number">24030381175065789627867818021031309186965318861955402618375094156989560631225056400068280970357343617465261811691559275086986164901405512215968447835573713149231336594364799146504286982124850979481910739400555900516891562640944424296188089156508429086638459243074623801424444379741940400624550247210709108293164193827193821978694274672716764474152393429524314859853376325015012885883855819552203740904895242301492787682366135817255276597250505586595070110209229270379691148517421288247672403709484984083988966720494416926899250840012575481136166618973367329708626081023089829778864549053830890201012932527796486827519</span></span><br><span class="line">c1=<span class="number">7706442311376298907118381553814187694306437942337200300920018382827744477296762105669322390236380377042026460058526286493515418722731849971411879053724334926597860433790660568227623266459105700578574867980278136078799958698624620338469216407947276632981229373095281141319203245321172350378427449842394930055529441744690732690189155630980736716300509547085032174345753133838250340838995285142338255951756404101946977370148727459867175980397841996210997274012491629791252693401571504945522427861126234928419824136852180508014703063857673244567242488630499415730763245048617632714296374909199028722650732705222178007385</span></span><br><span class="line">c2=<span class="number">22423938730620301024336096061283705945892027623793660306239291359418958473934583979350384252488494023600239884048653436314101275290157972045454993641659471672605679497398173588217340705125922148550132426481727445141158741816240665812195493040369287582638492321538655028939958996384211181094086886177394010485535445009088322043647955338445795429449360349339936606800994026319620067195422963814641797851423046506617965736694331256799051468484280532276344029152140431817760731420316457245257243157665090587855008596785240088881665435451552191237548113820151383474872494353994135644477990413743416249730006854238049329690</span></span><br><span class="line">e1=<span class="number">35</span></span><br><span class="line">e2=<span class="number">42</span></span><br><span class="line"></span><br><span class="line">s,s1,s2 = gmpy2.gcdext(e1,e2)</span><br><span class="line"></span><br><span class="line">m_7 = <span class="built_in">pow</span>(c1,s1,n)*<span class="built_in">pow</span>(c2,s2,n) % n</span><br><span class="line"></span><br><span class="line">e = s</span><br><span class="line">P.&lt;a&gt;=PolynomialRing(Zmod(n),implementation=<span class="string">&#x27;NTL&#x27;</span>)</span><br><span class="line">f=a^e-m_7</span><br><span class="line">mps=f.monic().roots()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> mps:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line">    flag=long_to_bytes(<span class="built_in">int</span>(i[<span class="number">0</span>]))</span><br><span class="line">    <span class="keyword">if</span> <span class="string">b&#x27;flag&#x27;</span> <span class="keyword">in</span> flag:</span><br><span class="line">        <span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag&#123;1_0nly_see_d4ylight_d4ylight&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="三个e的共模攻击"><a href="#三个e的共模攻击" class="headerlink" title="三个e的共模攻击"></a>三个e的共模攻击</h2><p>和两个e的共模攻击同理，只不过再算了一次</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import gmpy2</span></span><br><span class="line"><span class="comment"># import libnum</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># e1e2,s1,s2 = gmpy2.gcdext(e1,e2)</span></span><br><span class="line"><span class="comment"># c12 = pow(c1,s1,n)*pow(c2,s2,n)%n</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># e2e3,s2,s3 = gmpy2.gcdext(e2,e3)</span></span><br><span class="line"><span class="comment"># c23 = pow(c2,s2,n)*pow(c3,s3,n)%n</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># s12,s23,gcd = gmpy2.gcdext(e1e2,e2e3)</span></span><br><span class="line"><span class="comment"># m = pow(c12,s12,n)*pow(c23,s23,n1)%n</span></span><br><span class="line"><span class="comment"># print(libnum.n2s(m))</span></span><br></pre></td></tr></table></figure>
+<h2 id="没有直接给出e1、e2，需要爆破"><a href="#没有直接给出e1、e2，需要爆破" class="headerlink" title="没有直接给出e1、e2，需要爆破"></a>没有直接给出e1、e2，需要爆破</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"></span><br><span class="line"><span class="comment"># n =24030381175065789627867818021031309186965318861955402618375094156989560631225056400068280970357343617465261811691559275086986164901405512215968447835573713149231336594364799146504286982124850979481910739400555900516891562640944424296188089156508429086638459243074623801424444379741940400624550247210709108293164193827193821978694274672716764474152393429524314859853376325015012885883855819552203740904895242301492787682366135817255276597250505586595070110209229270379691148517421288247672403709484984083988966720494416926899250840012575481136166618973367329708626081023089829778864549053830890201012932527796486827519</span></span><br><span class="line"><span class="comment"># c1=7706442311376298907118381553814187694306437942337200300920018382827744477296762105669322390236380377042026460058526286493515418722731849971411879053724334926597860433790660568227623266459105700578574867980278136078799958698624620338469216407947276632981229373095281141319203245321172350378427449842394930055529441744690732690189155630980736716300509547085032174345753133838250340838995285142338255951756404101946977370148727459867175980397841996210997274012491629791252693401571504945522427861126234928419824136852180508014703063857673244567242488630499415730763245048617632714296374909199028722650732705222178007385</span></span><br><span class="line"><span class="comment"># c2=22423938730620301024336096061283705945892027623793660306239291359418958473934583979350384252488494023600239884048653436314101275290157972045454993641659471672605679497398173588217340705125922148550132426481727445141158741816240665812195493040369287582638492321538655028939958996384211181094086886177394010485535445009088322043647955338445795429449360349339936606800994026319620067195422963814641797851423046506617965736694331256799051468484280532276344029152140431817760731420316457245257243157665090587855008596785240088881665435451552191237548113820151383474872494353994135644477990413743416249730006854238049329690</span></span><br><span class="line"><span class="comment"># e1=35</span></span><br><span class="line"><span class="comment"># e2=42</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve_sharemoudle</span>(<span class="params">n,c1,c2,e1,e2</span>):</span><br><span class="line">    t = gmpy2.gcd(e1,e2)</span><br><span class="line">    <span class="keyword">if</span> t == <span class="number">1</span>:</span><br><span class="line">        s,x,y = gmpy2.gcdext(e1,e2)</span><br><span class="line">        m = (<span class="built_in">pow</span>(c1,x,n)*<span class="built_in">pow</span>(c2,y,n))%n</span><br><span class="line">        <span class="built_in">print</span>(long_to_bytes(m))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        s,x,y = gmpy2.gcdext(e1,e2)</span><br><span class="line">        k = <span class="number">0</span></span><br><span class="line">        <span class="comment"># while 1:</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10000</span>):</span><br><span class="line">            m = gmpy2.iroot((<span class="built_in">pow</span>(c1,x,n)*<span class="built_in">pow</span>(c2,y,n))%n +k*n,t)</span><br><span class="line">            <span class="keyword">if</span> m[<span class="number">1</span>]:</span><br><span class="line">                <span class="built_in">print</span>(long_to_bytes(m[<span class="number">0</span>]))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                k += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">e1e2= <span class="number">83317</span></span><br><span class="line">n= <span class="number">19361442710572745971265661179912428614335978862294499554478708154961900725571203060796104846289397242207304532314240136962004100859120350866177200389723065658762704195258332314791286248842309297348039111045266185355903400590470820183877252896166548216731371364979378507526744861441605219478410567943584909399458417880788827318597539692741384869777249157338164956516233081381729474311604082892186490173033244693551617094635430697205804969501877592642316320873084247185093376277647579480643486369145925195734181193015900482737320548696928588870712293186252013457131251209473809656777543374500592007808404407059561585875569527546497652518580045435210514546460508584320606314122520882426004609258608147903667923350952560862343978526661419457923377730038903725129920335146125419046956321000719022303404018007514471776998828154744785228693422230685108494515083105086516002742258455143048441346760686508352771381755359768486489070279892078844716848637514485979868052449468414483027672075237348001190373461535494802211938683204976566773050049547807712425194913096401165728862378611187510228222428679755307056276133497536735863204478321549958435946853973687386589497836951783399492540878952618631792625025126620608024559471293131768988077589502325651357976822933654550846615039529755326862460868499406888969184042128071</span></span><br><span class="line">c1= <span class="number">8461455935702774839606732696628583481106108739457157757237961493721249315707058365854463354773540401038228236301572933195823206925383589280380438344346918293151928169930134045632956081184945062566817678757614816611860006425866597730747864519352309046720733870943424680296477704991108084039103348714387678260925701357278152801810444616098214964231942511332731906589339642434586792884729500618636404879133808745489823990051381479316035290316511507860259556699539853817794899071305575419968794233519130191693519669424965740754005557268523536259961342893331243822271702601491251166024629032785331163334845458532041066873062181204642511730061193181806412423310871852101503714865811232852678040552266896756835104015126426669170036333066668010437674021104622132437422087899276215087590613842963706972249810831528040008304175911799215946803926073839260039708714727246670180210772138254229999545871929350538204078637835690649108982156556159082202035891312400182426109033284706424624286874595070797624804888642649414098331802113837492380725023537502746076689560748513729573164798419260068335949704460969862627638288475890309143274515210188524564546972793051029662396980537597835874860939675476734819945549433268818379519178647303476509820821756282974287073312744339124424284365074314353072957540119217061097316369179812</span></span><br><span class="line">c2= <span class="number">6204846642785521340470513546335239064256758077473460303136152226321426573866713276868303467627807818878464124001025948893472833684203082226317608116339642653526005250588488719287359040352790572959995584093188339849695217956472022875459556871491299322868787108334073007332501731796096022506406756118808831646084743403979543281704069120640233328839980099290857269846287187888156728145277024309531510105331797866833685076835273931526615042292719970926967658919153638762985362453791732734631621502983351581711188066449777097203043897589205329057225446193852593056040301734809364853181753118739604843784216536562612033307359103893806510482236157475021740603255590914121641809865052126419196638531405221094438510231726208366630512008162663744010330103156199459170979721924714894281792427651932643530734043790246173905509400532261288534889712214483873969552991657537356198890952147322594953541508366871552561029095676172024539741525694906063413062943730465813047155464168544196529490081901356676689826701155342513241655234549380041635792150618405682571311160853526719882812618473055821608217492122688669131559593093840370537049894579011917334477512297137182557102626033423909278319394496823138854073015927815382203590762482110896381565689852266596980436613904791614372199019839459027972129220041158226866818118745059</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fator_e1e2</span>(<span class="params">e1e2</span>):</span><br><span class="line">    <span class="keyword">for</span> e1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>, e1e2):</span><br><span class="line">        <span class="keyword">if</span> e1e2 % e1 == <span class="number">0</span>:</span><br><span class="line">            e2 = e1e2 // e1</span><br><span class="line">            solve_sharemoudle(n, c1, c2, e1, e2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment"># solve_sharemoudle(n, c1, c2, e1, e2)</span></span><br><span class="line">    fator_e1e2(e1e2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag&#123;6ff24d84-4310-4ff3-a5d0-d96558f21f18&#125;</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wbuildings
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wbuildings.github.io/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/" title="RSA之共模攻击">https://wbuildings.github.io/Crypto/RSA之共模攻击/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/RSA/" rel="tag"><i class="fa fa-tag"></i> RSA</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Crypto/NSSCTF-Round18/" rel="prev" title="NSSCTF Round18">
+      <i class="fa fa-chevron-left"></i> NSSCTF Round18
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Crypto/NKCTF2023/" rel="next" title="NKCTF2023">
+      NKCTF2023 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB"><span class="nav-number">1.</span> <span class="nav-text">共模攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#e1%E3%80%81e2%E4%B8%8D%E4%BA%92%E7%B4%A0%EF%BC%8C%E5%BC%80%E6%A0%B9%E7%9A%84%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB"><span class="nav-number">2.</span> <span class="nav-text">e1、e2不互素，开根的共模攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%91%E7%9B%BE%E6%9D%AF-2020-Daylight"><span class="nav-number">3.</span> <span class="nav-text">[黑盾杯 2020]Daylight</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB%E5%BC%80%E6%96%B9%E8%A7%A3%E4%B8%8D%E5%87%BA"><span class="nav-number">3.1.</span> <span class="nav-text">共模攻击开方解不出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E4%B8%AAe%E7%9A%84%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB"><span class="nav-number">4.</span> <span class="nav-text">三个e的共模攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E7%9B%B4%E6%8E%A5%E7%BB%99%E5%87%BAe1%E3%80%81e2%EF%BC%8C%E9%9C%80%E8%A6%81%E7%88%86%E7%A0%B4"><span class="nav-number">5.</span> <span class="nav-text">没有直接给出e1、e2，需要爆破</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wbuildings"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wbuildings</p>
+  <div class="site-description" itemprop="description">须知少年凌云志，曾许人间第一流</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- recent posts -->
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DSA/" rel="tag">DSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dual-RSA/" rel="tag">Dual RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNP/" rel="tag">HNP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFSR/" rel="tag">LFSR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LWE/" rel="tag">LWE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lattice/" rel="tag">Lattice</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MITM/" rel="tag">MITM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MT19937/" rel="tag">MT19937</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shamir/" rel="tag">Shamir</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sylvester/" rel="tag">Sylvester</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%85%83copper/" rel="tag">二元copper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag">密码知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9B%B2%E7%BA%BF/" rel="tag">曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%AE%B0/" rel="tag">杂记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A0%E6%95%B0/" rel="tag">素数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag">背包密码</a><span class="tag-list-count">2</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wbuildings</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">15:23</span>
+</div>
+
+  <script>
+    var OriginTitle = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '(*^▽^*)我藏好了哦~' + OriginTitle;
+        clearTimeout(titleTime);
+      } else {
+        document.title = 'q(≧▽≦q)被你发现啦~' + OriginTitle;
+        titleTime = setTimeout(function() {
+          document.title = OriginTitle;
+        }, 2000);
+      }
+    });
+  </script>
+
+
+<script color="24,24,24" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://wbuildings.github.io/Crypto/RSA%E4%B9%8B%E5%85%B1%E6%A8%A1%E6%94%BB%E5%87%BB/',]
+      });
+      });
+  </script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'apuSRwmMMe8HwB5WcdQuox47-gzGzoHsz',
+      appKey     : 'MS1uA9PBT4L62Jbrjbh0UEHT',
+      placeholder: "在这里写下你的评论吧！",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  <script async src="/js/love.min.js"></script>
+
+
+
+
+
+    </div>
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>

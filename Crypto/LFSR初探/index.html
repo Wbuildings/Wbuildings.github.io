@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/font-awesome/css/font-awesome.min.css"/ media="defer" onload="this.media='all'">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.loli.net/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wbuildings.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="回顾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LFSR初探">
+<meta property="og:url" content="https://wbuildings.github.io/Crypto/LFSR%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="W&#39;Blog">
+<meta property="og:description" content="回顾">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240809212924563.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240810100603853.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240811200355681.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesa539c12f541078dbda14824076d0b516.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images9605354f004c487ac512b2e1f2b5e819.png">
+<meta property="article:published_time" content="2024-08-09T13:24:29.000Z">
+<meta property="article:modified_time" content="2024-08-13T10:55:38.970Z">
+<meta property="article:author" content="Wbuildings">
+<meta property="article:tag" content="LFSR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240809212924563.png">
+
+<link rel="canonical" href="https://wbuildings.github.io/Crypto/LFSR%E5%88%9D%E6%8E%A2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>LFSR初探 | W'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <script defer src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">W'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Wbuildings的自勉小屋</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL1didWlsZGluZ3M=" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wbuildings.github.io/Crypto/LFSR%E5%88%9D%E6%8E%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Wbuildings">
+      <meta itemprop="description" content="须知少年凌云志，曾许人间第一流">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="W'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LFSR初探
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-08-09 21:24:29" itemprop="dateCreated datePublished" datetime="2024-08-09T21:24:29+08:00">2024-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/Crypto/LFSR%E5%88%9D%E6%8E%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/Crypto/LFSR%E5%88%9D%E6%8E%A2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>回顾</p>
+<span id="more"></span>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述:"></a><strong>概述:</strong></h1><p>线性反馈移位寄存器（LFSR）归属于移位寄存器（FSR）,除此之外还有非线性移位寄存器（NFSR）。移位寄存器是流密码产生密钥流的一个主要组成部分。</p>
+<p><code>GF(2)</code>上一个n级反馈移位寄存器由<font color=orange>n个二元存储器</font>与一个<font color=orange>反馈函数<br>$f(a_1,a_2,…,a_n)$组成</font>，如下图所示。</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240809212924563.png" alt="image-20240809212924563"></p>
+<p>移位寄存器的三要素：</p>
+<ul>
+<li>初始状态：由用户确定</li>
+<li>反馈函数：$f(a_1,a_2,…,a_n)$是n元布尔函数，即函数的自变量和因变量只取0和1这两个可能值</li>
+<li>输出序列</li>
+</ul>
+<p>如果反馈函数是线性的，那么我们称其为 LFSR，此时可以如下表示,：</p>
+<script type="math/tex; mode=display">
+f(a_1,a_2,...,a_n) = c_1a_n⊕c_2a_{n-1}⊕...⊕c_na_1</script><p>其中 $c_i={0,1}$ </p>
+<p>输出序列满足：</p>
+<script type="math/tex; mode=display">
+\left\{\begin{matrix}
+ a_{n+1} = c_1a_n⊕c_2a_{n-1}⊕...⊕c_na_1 \\
+ a_{n+2} = c_1a_{n+1}⊕c_2a_n⊕...⊕c_na_2 \\
+ \vdots  \\
+ a_{n+i} = c_1a_{n+i-1}⊕c_2a_{n+i-2}⊕...⊕c_na_i
+\end{matrix}\right.</script><h2 id="举个栗子："><a href="#举个栗子：" class="headerlink" title="举个栗子："></a>举个栗子：</h2><p>下面是一个5级的线性反馈移位寄存器，其初始状态为$(a_1,a_2,…,a_n)= (1,0,0,1,1)$</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240810100603853.png" alt="image-20240810100603853"></p>
+<p>反馈函数为：</p>
+<script type="math/tex; mode=display">
+a_{5+i} = a_{3+i}⊕a_i</script><p><code>(i = 1,2,...)</code> </p>
+<p>可以得到输出序列为：</p>
+<p><font color=orange>1001101001000010101110110001111</font> 100110…</p>
+<p>周期为31。</p>
+<blockquote>
+<p>对于 n 级线性反馈移位寄存器，最长周期为$2^n-1$（排除全零）。达到最长周期的序列一般称为 m 序列</p>
+</blockquote>
+<p>代码辅助理解</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="string">&#x27;10011&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">31</span>-<span class="built_in">len</span>(a)):</span><br><span class="line">    a+= <span class="built_in">str</span>(<span class="built_in">int</span>(a[i])^<span class="built_in">int</span>(a[i+<span class="number">3</span>]))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1001101001000010101110110001111</span></span><br></pre></td></tr></table></figure>
+<hr>
+<hr>
+<h1 id="栗子："><a href="#栗子：" class="headerlink" title="栗子："></a>栗子：</h1><h2 id="2018-强网杯-Streamgame1"><a href="#2018-强网杯-Streamgame1" class="headerlink" title="2018 强网杯 Streamgame1"></a>2018 强网杯 Streamgame1</h2><p><strong>考点：已知反馈函数，输出序列，求逆推出初始状态</strong> </p>
+<p>题目：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flag <span class="keyword">import</span> flag</span><br><span class="line"><span class="keyword">assert</span> flag.startswith(<span class="string">&quot;flag&#123;&quot;</span>)</span><br><span class="line"><span class="keyword">assert</span> flag.endswith(<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"><span class="comment"># 作用：判断字符串是否以指定字符 开头或结尾</span></span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">len</span>(flag)==<span class="number">25</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lfsr</span>(<span class="params">R,mask</span>):</span><br><span class="line">    output = (R &lt;&lt; <span class="number">1</span>) &amp; <span class="number">0xffffff</span> <span class="comment">#将R向左移动1位，bin(0xffffff)=&#x27;0b111111111111111111111111&#x27;</span></span><br><span class="line">    i=(R&amp;mask)&amp;<span class="number">0xffffff</span>          <span class="comment">#按位与运算符&amp;：参与运算的两个值,如果两个相应位都为1,则该位的结果为1,否则为0</span></span><br><span class="line">    lastbit=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i!=<span class="number">0</span>:</span><br><span class="line">        lastbit^=(i&amp;<span class="number">1</span>)           <span class="comment">#按位异或运算，得到输出序列</span></span><br><span class="line">        i=i&gt;&gt;<span class="number">1</span></span><br><span class="line">    output^=lastbit              <span class="comment">#将输出值写入 output的后面</span></span><br><span class="line">    <span class="keyword">return</span> (output,lastbit)</span><br><span class="line"></span><br><span class="line">R=<span class="built_in">int</span>(flag[<span class="number">5</span>:-<span class="number">1</span>],<span class="number">2</span>)  <span class="comment">#flag为二进制数据</span></span><br><span class="line">mask = <span class="number">0b1010011000100011100</span></span><br><span class="line"></span><br><span class="line">f=<span class="built_in">open</span>(<span class="string">&quot;key&quot;</span>,<span class="string">&quot;ab&quot;</span>)   <span class="comment">#以二进制追加模式打开，如果文件不存在，它将被创建；如果文件已存在，则将在文件末尾追加内容</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">12</span>):</span><br><span class="line">    tmp=<span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">        (R,out)=lfsr(R,mask)</span><br><span class="line">        tmp=(tmp &lt;&lt; <span class="number">1</span>)^out</span><br><span class="line">    f.write(<span class="built_in">chr</span>(tmp))   <span class="comment">#将lfsr输出的序列每8个二进制为一组，转化为字符，共12组</span></span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<p>攻防世界找到的题，应该是上传者自己的笔记</p>
+<p>分析：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">lfsr</span>(<span class="params">R,mask</span>):</span><br><span class="line">    output = (R &lt;&lt; <span class="number">1</span>) &amp; <span class="number">0xffffff</span> <span class="comment"># 将R向左移动1位，bin(0xffffff)=&#x27;0b111111111111111111111111&#x27;</span></span><br><span class="line">    i=(R&amp;mask)&amp;<span class="number">0xffffff</span>          <span class="comment"># 按位与运算符&amp;：参与运算的两个值,如果两个相应位都为1,则该位的结果为1,否则为0</span></span><br><span class="line">    lastbit=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i!=<span class="number">0</span>:</span><br><span class="line">        lastbit^=(i&amp;<span class="number">1</span>)           <span class="comment"># 按位异或运算，得到输出序列</span></span><br><span class="line">        i=i&gt;&gt;<span class="number">1</span></span><br><span class="line">    output^=lastbit              <span class="comment"># 将输出值写入 output的后面</span></span><br><span class="line">    <span class="keyword">return</span> (output,lastbit)</span><br><span class="line"></span><br><span class="line">R=<span class="built_in">int</span>(flag[<span class="number">5</span>:-<span class="number">1</span>],<span class="number">2</span>)  <span class="comment"># flag为二进制数据</span></span><br><span class="line">mask = <span class="number">0b1010011000100011100</span></span><br><span class="line">(R,out)=lfsr(R,mask)</span><br><span class="line">tmp=(tmp &lt;&lt; <span class="number">1</span>)^out</span><br><span class="line"></span><br><span class="line">f.write(<span class="built_in">chr</span>(tmp)) </span><br></pre></td></tr></table></figure>
+<p>第一次接触的时候就是因为看似复杂的代码逻辑而暂且放弃的，其实也没啥，读！</p>
+<p>最后发现这就是三要素中的反馈函数，关注一下 &amp; 运算的意义就行：</p>
+<script type="math/tex; mode=display">
+R：a_{n+i} = c_1a_{n+i-1}⊕c_2a_{n+i-2}⊕ \dots ⊕c_na_i</script><p><code>（i=1,2,3...）</code> </p>
+<p>此题中，c 就是 mask，R就是a，<code>lastbit</code>也就是 $a_{n+i}$ ，并且将out（<code>lastbit</code>）存入key中，</p>
+<p>而<code>R</code>和<code>mask</code>的长度都是19位，所以只需取key的前19个数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;key&#x27;</span>,<span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">r = bytes_to_long(f)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;0&#x27;</span>+<span class="built_in">str</span>(<span class="built_in">bin</span>(r)[<span class="number">2</span>:<span class="number">20</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 0101010100111000111</span></span><br></pre></td></tr></table></figure>
+<p>将 <code>mask</code> 代入进去，只有当 c为 1 的时候  $c_ia_j$ 才可能是 1</p>
+<p>$R_{n+i} = (R[-3])⊕(R[-4])⊕(R[-5])⊕(R[-9])⊕(R[-13])⊕(R[-14])⊕(R[-17])⊕(R[-19])$ </p>
+<p>现在我们知道了 <code>key = 0101010100111000111</code>，一位一位异或恢复R即可</p>
+<p><code>key[-1] = 1</code> </p>
+<p>$1 = a_{19}⊕(R[-3])⊕(R[-4])⊕(R[-5])⊕(R[-9])⊕(R[-13])⊕(R[-14])⊕(R[-17])$ </p>
+<p>此时 <code>R = key</code> </p>
+<p>以此类推  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask = <span class="string">&#x27;1010011000100011100&#x27;</span>  <span class="comment">#顺序 c_n,c_&#123;n-1&#125;,。。。,c_1</span></span><br></pre></td></tr></table></figure>
+<h3 id="exp1："><a href="#exp1：" class="headerlink" title="exp1："></a>exp1：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;key&#x27;</span>,<span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">r = bytes_to_long(f)</span><br><span class="line">key = <span class="string">&#x27;0&#x27;</span>+<span class="built_in">str</span>(<span class="built_in">bin</span>(r)[<span class="number">2</span>:<span class="number">20</span>])</span><br><span class="line"><span class="comment"># bin_out = bin(r)[2:].zfill(12*8)</span></span><br><span class="line"><span class="comment"># key = bin_out[:19]    </span></span><br><span class="line"></span><br><span class="line">mask = <span class="string">&#x27;1010011000100011100&#x27;</span>  </span><br><span class="line"></span><br><span class="line">R = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">19</span>):</span><br><span class="line">    output = <span class="string">&#x27;x&#x27;</span>+key[:<span class="number">18</span>]</span><br><span class="line">    out = <span class="built_in">int</span>(key[-<span class="number">1</span>])^<span class="built_in">int</span>(output[-<span class="number">3</span>])^<span class="built_in">int</span>(output[-<span class="number">4</span>])^<span class="built_in">int</span>(output[-<span class="number">5</span>])^<span class="built_in">int</span>(output[-<span class="number">9</span>])^<span class="built_in">int</span>(output[-<span class="number">13</span>])^<span class="built_in">int</span>(output[-<span class="number">14</span>])^<span class="built_in">int</span>(output[-<span class="number">17</span>])</span><br><span class="line">    R += <span class="built_in">str</span>(out)</span><br><span class="line">    key = <span class="built_in">str</span>(out)+key[:<span class="number">18</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;flag&#123;&#x27;</span>+R[::-<span class="number">1</span>]+<span class="string">&#x27;&#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># flag&#123;1110101100001101011&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="exp2："><a href="#exp2：" class="headerlink" title="exp2："></a>exp2：</h3><p>思路与上面一致</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">key = <span class="string">&#x27;0101010100111000111&#x27;</span></span><br><span class="line">mask = <span class="number">0b1010011000100011100</span></span><br><span class="line"></span><br><span class="line">R = <span class="string">&quot;&quot;</span></span><br><span class="line">index = <span class="number">0</span></span><br><span class="line">key = key[<span class="number">18</span>] + key[:<span class="number">19</span>]</span><br><span class="line"><span class="keyword">while</span> index &lt; <span class="number">19</span>:</span><br><span class="line">    tmp = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">19</span>):</span><br><span class="line">        <span class="keyword">if</span> mask &gt;&gt; i &amp; <span class="number">1</span>:</span><br><span class="line">            tmp ^= <span class="built_in">int</span>(key[<span class="number">18</span> - i])</span><br><span class="line">    R += <span class="built_in">str</span>(tmp)</span><br><span class="line">    index += <span class="number">1</span></span><br><span class="line">    key = key[<span class="number">18</span>] + <span class="built_in">str</span>(tmp) + key[<span class="number">1</span>:<span class="number">18</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(R[::-<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="exp3"><a href="#exp3" class="headerlink" title="exp3:"></a>exp3:</h3><p>R，即 <code>seed</code>，构成只有 0，1，爆破系数不大，可以接受</p>
+<p>我们可以猜测<code>seed</code>的第19位（0或1），如果<code>seed19+R[:18]</code>输出值等于<code>R[:19]</code>，那么就可以确定<code>seed</code>值了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span>*</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;key&#x27;</span>,<span class="string">&#x27;rb&#x27;</span>).read()</span><br><span class="line">c = bytes_to_long(f)</span><br><span class="line">bin_out = <span class="built_in">bin</span>(c)[<span class="number">2</span>:].zfill(<span class="number">12</span>*<span class="number">8</span>)  </span><br><span class="line"></span><br><span class="line">mask = <span class="number">0b1010011000100011100</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lfsr</span>(<span class="params">R,mask</span>):</span><br><span class="line">    output = (R &lt;&lt; <span class="number">1</span>) &amp; <span class="number">0xffffffff</span></span><br><span class="line">    i=(R&amp;mask)&amp;<span class="number">0xffffffff</span></span><br><span class="line">    lastbit=<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i!=<span class="number">0</span>:</span><br><span class="line">        lastbit^=(i&amp;<span class="number">1</span>)</span><br><span class="line">        i=i&gt;&gt;<span class="number">1</span></span><br><span class="line">    output^=lastbit</span><br><span class="line">    <span class="keyword">return</span> (output,lastbit)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">blow_up</span>():</span><br><span class="line">    key = bin_out[<span class="number">0</span>:<span class="number">19</span>]      </span><br><span class="line">    tmp = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">19</span>):</span><br><span class="line">        <span class="keyword">if</span> lfsr(<span class="built_in">int</span>(<span class="string">&#x27;0&#x27;</span>+key[<span class="number">0</span>:<span class="number">18</span>],<span class="number">2</span>),mask)[<span class="number">0</span>] == <span class="built_in">int</span>(key,<span class="number">2</span>):	<span class="comment"># 正序</span></span><br><span class="line">            tmp += <span class="string">&#x27;0&#x27;</span></span><br><span class="line">            key = <span class="string">&#x27;0&#x27;</span>+key[<span class="number">0</span>:<span class="number">18</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tmp += <span class="string">&#x27;1&#x27;</span></span><br><span class="line">            key = <span class="string">&#x27;1&#x27;</span> + key[<span class="number">0</span>:<span class="number">18</span>]</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">int</span>(tmp[::-<span class="number">1</span>],<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">r = blow_up()</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">bin</span>(r))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1110101100001101011</span></span><br></pre></td></tr></table></figure>
+<h1 id="B-M-算法"><a href="#B-M-算法" class="headerlink" title="B-M 算法"></a>B-M 算法</h1><p>如果我们知道了长度为 2n 的输出序列，那么就可以通过构造矩阵来求出 <code>mask</code>,</p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesimage-20240811200355681.png" alt="B-M"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">R = <span class="string">&#x27;1000010001101010011111100000110111010011001100011001101100011100000101001000000000000110000011101011100000111010111011101100001001110110001100111010110111011101010111111011011111110010011010010011000011100100010110000011001001011000010111001110010010110001&#x27;</span></span><br><span class="line"></span><br><span class="line">X = []</span><br><span class="line">S = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">128</span>):</span><br><span class="line">    X.append([<span class="built_in">int</span>(j) <span class="keyword">for</span> j <span class="keyword">in</span> (R[i:i+<span class="number">128</span>])])</span><br><span class="line">    S.append(<span class="built_in">int</span>(R[<span class="number">128</span>+i]))</span><br><span class="line">    </span><br><span class="line">X = matrix(GF(<span class="number">2</span>), X)</span><br><span class="line">S = vector(GF(<span class="number">2</span>), S)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print(X.nrows())     # 矩阵行数</span></span><br><span class="line"><span class="comment"># print(X.ncols())	   # 矩阵列数</span></span><br><span class="line"></span><br><span class="line">X = X.inverse()</span><br><span class="line">mask = X * S</span><br><span class="line"><span class="comment"># print(mask)</span></span><br><span class="line"></span><br><span class="line">flag = [<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> mask]</span><br><span class="line">flag = <span class="built_in">int</span>(<span class="string">&#x27;&#x27;</span>.join(flag),<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">b&#x27;flag&#123;&#x27;</span> + long_to_bytes(flag) + <span class="string">b&#x27;&#125;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="Reference："><a href="#Reference：" class="headerlink" title="Reference："></a>Reference：</h1><p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYW5xdWFua2UuY29tL3Bvc3QvaWQvMTgxODExI2gyLTA=">深入分析CTF中的LFSR类题目（一）-安全客 - 安全资讯平台<i class="fa fa-external-link-alt"></i></span> </p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuZnJlZWJ1Zi5jb20vYXJ0aWNsZXMvbmV0d29yay8yNjgwMTUuaHRtbA==">CTF竞赛密码学之 LFSR - FreeBuf网络安全行业门户<i class="fa fa-external-link-alt"></i></span> </p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9jdGYtd2lraS5vcmcvY3J5cHRvL3N0cmVhbWNpcGhlci9mc3IvbGZzci8jYi1t">线性反馈移位寄存器 - LFSR - CTF Wiki (ctf-wiki.org)<i class="fa fa-external-link-alt"></i></span> </p>
+<hr>
+<h1 id="彩蛋："><a href="#彩蛋：" class="headerlink" title="彩蛋："></a><strong>彩蛋：</strong></h1><h2 id="加法-和-异或-的异同"><a href="#加法-和-异或-的异同" class="headerlink" title="加法 和 异或 的异同"></a>加法 和 异或 的<strong>异同</strong></h2><p>异或</p>
+<ul>
+<li>0⊕0=0 </li>
+<li>0⊕1=1 </li>
+<li>1⊕0=1 </li>
+<li>1⊕1=0 </li>
+</ul>
+<p>加法</p>
+<ul>
+<li>0+0=0 </li>
+<li>0+1=1 </li>
+<li>1+0=1 </li>
+<li>1+1=10（在二进制下进位，结果是 0 且产生进位 1） </li>
+</ul>
+<h2 id="exp1-理解图"><a href="#exp1-理解图" class="headerlink" title="exp1 理解图"></a>exp1 理解图</h2><p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/imagesa539c12f541078dbda14824076d0b516.png" alt="img"></p>
+<p><img data-src="https://cdn.jsdelivr.net/gh/Wbuildings/hexoimage/images9605354f004c487ac512b2e1f2b5e819.png" alt="9605354f004c487ac512b2e1f2b5e819"></p>
+
+    </div>
+
+    
+    
+    
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Wbuildings
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://wbuildings.github.io/Crypto/LFSR%E5%88%9D%E6%8E%A2/" title="LFSR初探">https://wbuildings.github.io/Crypto/LFSR初探/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/LFSR/" rel="tag"><i class="fa fa-tag"></i> LFSR</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/Crypto/Shamir%E9%97%A8%E9%99%90%E6%96%B9%E6%A1%88/" rel="prev" title="Shamir门限方案">
+      <i class="fa fa-chevron-left"></i> Shamir门限方案
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/Crypto/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF/" rel="next" title="2024羊城杯">
+      2024羊城杯 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述:</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%B8%AA%E6%A0%97%E5%AD%90%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">举个栗子：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%97%E5%AD%90%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">栗子：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-%E5%BC%BA%E7%BD%91%E6%9D%AF-Streamgame1"><span class="nav-number">2.1.</span> <span class="nav-text">2018 强网杯 Streamgame1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#exp1%EF%BC%9A"><span class="nav-number">2.1.1.</span> <span class="nav-text">exp1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exp2%EF%BC%9A"><span class="nav-number">2.1.2.</span> <span class="nav-text">exp2：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exp3"><span class="nav-number">2.1.3.</span> <span class="nav-text">exp3:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-M-%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">B-M 算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">Reference：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%A9%E8%9B%8B%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">彩蛋：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E6%B3%95-%E5%92%8C-%E5%BC%82%E6%88%96-%E7%9A%84%E5%BC%82%E5%90%8C"><span class="nav-number">5.1.</span> <span class="nav-text">加法 和 异或 的异同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp1-%E7%90%86%E8%A7%A3%E5%9B%BE"><span class="nav-number">5.2.</span> <span class="nav-text">exp1 理解图</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Wbuildings"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Wbuildings</p>
+  <div class="site-description" itemprop="description">须知少年凌云志，曾许人间第一流</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- recent posts -->
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AES/" rel="tag">AES</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DSA/" rel="tag">DSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dual-RSA/" rel="tag">Dual RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HNP/" rel="tag">HNP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LFSR/" rel="tag">LFSR</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LWE/" rel="tag">LWE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lattice/" rel="tag">Lattice</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MITM/" rel="tag">MITM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MT19937/" rel="tag">MT19937</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RSA/" rel="tag">RSA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shamir/" rel="tag">Shamir</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sylvester/" rel="tag">Sylvester</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Wp/" rel="tag">Wp</a><span class="tag-list-count">19</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sage/" rel="tag">sage</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%85%83copper/" rel="tag">二元copper</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81/" rel="tag">古典密码</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E7%9F%A5%E8%AF%86/" rel="tag">密码知识</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9B%B2%E7%BA%BF/" rel="tag">曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9D%82%E8%AE%B0/" rel="tag">杂记</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A0%E6%95%B0/" rel="tag">素数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%83%8C%E5%8C%85%E5%AF%86%E7%A0%81/" rel="tag">背包密码</a><span class="tag-list-count">2</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wbuildings</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">15:23</span>
+</div>
+
+  <script>
+    var OriginTitle = document.title;
+    var titleTime;
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        document.title = '(*^▽^*)我藏好了哦~' + OriginTitle;
+        clearTimeout(titleTime);
+      } else {
+        document.title = 'q(≧▽≦q)被你发现啦~' + OriginTitle;
+        titleTime = setTimeout(function() {
+          document.title = OriginTitle;
+        }, 2000);
+      }
+    });
+  </script>
+
+
+<script color="24,24,24" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout : 3000,
+        priority: true,
+        ignores : [uri => uri.includes('#'),uri => uri === 'https://wbuildings.github.io/Crypto/LFSR%E5%88%9D%E6%8E%A2/',]
+      });
+      });
+  </script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'apuSRwmMMe8HwB5WcdQuox47-gzGzoHsz',
+      appKey     : 'MS1uA9PBT4L62Jbrjbh0UEHT',
+      placeholder: "在这里写下你的评论吧！",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+
+  <script async src="/js/love.min.js"></script>
+
+
+
+
+
+    </div>
+<script async>window.onload=function(){var a=document.createElement('script'),b=document.getElementsByTagName('script')[0];a.type='text/javascript',a.async=!0,a.src='/sw-register.js?v='+Date.now(),b.parentNode.insertBefore(a,b)};</script></body></html>
